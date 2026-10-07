@@ -52,11 +52,27 @@ export function migrate(db: Database): void {
 
 /** Drop all domain tables and re-apply the schema. Local dev/test only. */
 export function resetDatabase(db: Database): void {
-  db.exec(`DROP TABLE IF EXISTS demo_sessions;
+  db.exec(`PRAGMA foreign_keys=OFF;
+DROP TABLE IF EXISTS data_purchases;
+DROP TABLE IF EXISTS airtime_purchases;
+DROP TABLE IF EXISTS emails;
+DROP TABLE IF EXISTS support_cases;
+DROP TABLE IF EXISTS voice_profiles;
+DROP TABLE IF EXISTS authorization_attempts;
+DROP TABLE IF EXISTS authentication_attempts;
+DROP TABLE IF EXISTS conversation_messages;
+DROP TABLE IF EXISTS calls;
+DROP TABLE IF EXISTS data_plans;
+DROP TABLE IF EXISTS beneficiaries;
+DROP TABLE IF EXISTS accounts;
+DROP TABLE IF EXISTS customers;
+DROP TABLE IF EXISTS provider_requests;
+DROP TABLE IF EXISTS demo_sessions;
 DROP TABLE IF EXISTS transactions;
 DROP TABLE IF EXISTS events;
 DROP TABLE IF EXISTS sessions;
-DROP TABLE IF EXISTS schema_migrations;`);
+DROP TABLE IF EXISTS schema_migrations;
+PRAGMA foreign_keys=ON;`);
   migrate(db);
 }
 

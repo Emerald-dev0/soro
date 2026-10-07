@@ -7,6 +7,8 @@ import { dashboardRoutes } from '../src/dashboard.routes.js';
 import { healthRoutes } from '../src/health.routes.js';
 import { demoRoutes } from '../src/demo.routes.js';
 import { authRoutes } from '../src/auth.routes.js';
+import { voiceIdentityRoutes } from '../src/voice-identity.routes.js';
+import { DemoVoiceIdentityProvider } from '@soro/service-security';
 import { sseRoutes } from '../src/events.routes.js';
 
 function testApp() {
@@ -26,6 +28,7 @@ function testApp() {
   sseRoutes(app);
   demoRoutes(app, database, core);
   authRoutes(app, database);
+  voiceIdentityRoutes(app, database, new DemoVoiceIdentityProvider(database));
   return { app, database };
 }
 
@@ -124,6 +127,14 @@ describe('authn endpoint', () => {
     const { app } = testApp();
     const res = await app.inject({ method: 'POST', url: '/api/authn', payload: { customerId: 'cust-daniel', method: 'DTMF_PIN', pin: '0000' } });
     expect(res.json().data?.outcome ?? res.json()).toBe('FAILED');
+  });
+});
+
+describe('voice identity', () => {
+  it('verifies an enrolled customer', async () => {
+    const { app } = testApp();
+    const res = await app.inject({ method: 'POST', url: '/api/voice/verify', payload: { customerId: 'cust-daniel' } });
+    expect(res.json().data.ok).toBe(true);
   });
 });
 

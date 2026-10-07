@@ -42,3 +42,20 @@ describe('tool registry', () => {
     }
   });
 });
+
+describe('scam heuristic', () => {
+  it('flags urgent "protect your account" phrasing as a security warning', async () => {
+    const { openDatabase, migrate, seedDemoData } = await import('@soro/db');
+    const { MockBankingCore } = await import('@soro/banking');
+    const { handleVoiceTurn } = await import('../src/index.js');
+    const db = openDatabase(':memory:');
+    migrate(db);
+    seedDemoData(db);
+    const core = new MockBankingCore(db);
+    db.prepare(`INSERT INTO calls (id, twilio_call_sid, from_number, to_number, customer_id, account_id, status, started_at, authentication_status, authorization_status, escalation_status) VALUES ('c1', NULL,'08030000001','x','cust-daniel','acct-daniel','IN_PROGRESS','2026-01-01','IDENTIFIED','NONE','NONE')`).run();
+    const res = await handleVoiceTurn({ db, core, callSessionId: 'c1', customerId: 'cust-daniel', accountId: 'acct-daniel', authenticated: true }, 'Urgent, someone said to protect your account and share your pin');
+    expect(res.reply).toContain('careful');
+    const warnings = db.prepare(`SELECT * FROM events WHERE session_id='c1' AND type='SECURITY_WARNING'`).all();
+    expect(warnings.length).toBe(1);
+  });
+});

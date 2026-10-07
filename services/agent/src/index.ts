@@ -41,6 +41,13 @@ export async function handleVoiceTurn(ctx: AgentContext, utterance: string): Pro
   const understood = understandUtterance(utterance);
   recordEventSnapshot(ctx.db, ctx.callSessionId, 'INTENT_DETECTED', { intent: understood.intent, language: understood.language });
 
+  // Deterministic scam/social-engineering heuristic (prototype, NOT production fraud detection).
+  const SCAM_PATTERNS = /urgent|protect your account|share your pin|send otp|someone called earlier saying|verified caller|your account will be blocked/i;
+  if (SCAM_PATTERNS.test(utterance)) {
+    recordEventSnapshot(ctx.db, ctx.callSessionId, 'SECURITY_WARNING', { reason: 'SUSPICIOUS_SCAM_PATTERN', simulatedDetector: true });
+    return { reply: 'Please be careful. I will never ask for your PIN or OTP by phone. If this call seems suspicious, hang up and call a number printed on your card. I have flagged this as a potential scam.', requiresDtmf: false };
+  }
+
   if (understood.intent === 'CONFIRM' && ctx.pendingTool) {
     if (ctx.pendingTool.requiresAuthz) {
       recordEventSnapshot(ctx.db, ctx.callSessionId, 'AUTHORIZATION_STARTED', { tool: ctx.pendingTool.name });

@@ -10,7 +10,11 @@ import { dashboardRoutes } from './dashboard.routes.js';
 import { sseRoutes } from './events.routes.js';
 import { demoRoutes } from './demo.routes.js';
 import { authRoutes } from './auth.routes.js';
+import { voiceIdentityRoutes } from './voice-identity.routes.js';
+import { DemoVoiceIdentityProvider } from '@soro/service-security';
 import { healthRoutes } from './health.routes.js';
+import { installRateLimit } from './rate-limit.js';
+import { installAdminGuard } from './admin-guard.js';
 
 export interface AppContext {
   dbPath: string;
@@ -27,6 +31,8 @@ export function buildApp(): ReturnType<typeof Fastify> {
     (req as unknown as { id_: string }).id_ = randomUUID();
   });
 
+  installAdminGuard(app);
+  installRateLimit(app, ['/api/twilio', '/api/authn', '/api/demo'], { windowMs: 60_000, max: Number(process.env.RATE_LIMIT_PER_MINUTE ?? 120) });
   healthRoutes(app, database);
   twilioVoiceRoute(app, database, core);
   twilioGatherRoute(app, database, core);
@@ -36,6 +42,7 @@ export function buildApp(): ReturnType<typeof Fastify> {
   sseRoutes(app);
   demoRoutes(app, database, core);
   authRoutes(app, database);
+  voiceIdentityRoutes(app, database, new DemoVoiceIdentityProvider(database));
 
   app.addHook('onResponse', async (req) => {
     req.log.info({ requestId: (req as unknown as { id_: string }).id_ }, 'request complete');
