@@ -22,9 +22,9 @@ export function vapiRoutes(app: FastifyInstance, db: Database, core: MockBanking
         try {
           const ctx = buildVapiContext(db, core, callId, msg.call as { id?: string; customer?: { number?: string } } | undefined);
           const result = await runToolByName(ctx, tc.name, normalizeArgs(tc.parameters ?? {}));
-          results.push({ toolCallId: tc.id, result });
+          results.push({ name: tc.name, toolCallId: tc.id, result });
         } catch (e) {
-          results.push({ toolCallId: tc.id, result: `Sorry, that action failed: ${(e as Error).message}` });
+          results.push({ name: tc.name, toolCallId: tc.id, result: `Sorry, that action failed: ${(e as Error).message}` });
         }
       }
       return { results };
