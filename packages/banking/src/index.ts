@@ -151,3 +151,4 @@ export function createBankingProvider(
   if (name === 'wema') return new WemaProvider();
   throw new Error(`Unknown banking provider: ${String(name)}`);
 }
+export * from "./mock-core.js";

@@ -1,20 +1,24 @@
 {
-  "name": "@soro/banking",
+  "name": "@soro/service-agent",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Soro BankingProvider abstraction: Demo adapter (real) + Wema adapter (NOT VERIFIED stub)",
+  "description": "Ayo's agent layer: tool registry, intent extraction, policy enforcement",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "scripts": {
-    "dev": "echo \"@soro/banking: library package (no dev server)\"",
+    "dev": "echo \"agent: library service\"",
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "eslint src tests",
     "test": "vitest run tests src"
   },
   "dependencies": {
+    "@soro/banking": "workspace:*",
+    "@soro/db": "workspace:*",
+    "@soro/events": "workspace:*",
+    "@soro/service-security": "workspace:*",
     "@soro/types": "workspace:*",
-    "@soro/db": "workspace:*"
+    "zod": "^4.0.0"
   }
 }

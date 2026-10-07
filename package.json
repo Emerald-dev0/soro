@@ -31,8 +31,13 @@
     "@soro/validation": "workspace:*",
     "@types/node": "^24.0.0",
     "eslint": "^9.18.0",
+    "tsx": "^4.23.15",
     "typescript": "~5.9.2",
     "typescript-eslint": "^8.20.0",
     "vitest": "^3.2.4"
+  },
+  "dependencies": {
+    "fastify": "^5.12.5",
+    "twilio": "^6.1.2"
   }
 }

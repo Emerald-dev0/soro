@@ -157,3 +157,5 @@ export function getTransaction(db: Database, reference: string): Transaction | u
     updatedAt: row['updated_at'] as string,
   };
 }
+
+export * from './domain.js';
