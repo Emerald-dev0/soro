@@ -1,61 +1,57 @@
-# Soro — Demo Mode
+# Soro — Hackathon Demo
 
-> **Phase 0 status: PIECES REAL, RUNNER PLANNED.** Deterministic banking
-> (`DemoBankingProvider`), event envelopes with replay overrides, journey
-> spine, and seed data exist and are tested. The clickable scenario runner
-> UI is Phase 1.
->
-> Related: PRODUCT.md · SYSTEM-FLOW.md · COMMAND-CENTER.md · EVENTS.md ·
-> BANKING.md · TESTING.md
+## What the demo proves
 
-## 1. Purpose / demo objective
+One real flow: phone call → customer identification → Ayo conversation →
+explicit confirmation → DTMF PIN authorization → mock banking core executes
+against REAL persisted state → events stream → dashboard-ready timeline.
 
-Prove the thesis live on stage: a person speaks naturally → Soro
-understands → validates → securely orchestrates → provider executes →
-Ayo communicates → Command Center shows everything. Demo Mode guarantees
-this story works with zero credentials and zero network.
+## Deterministic local demo (no Twilio account needed)
 
-## 2. Primary demo journey (Pidgin balance inquiry)
+```bash
+pnpm install
+pnpm db:reset && pnpm db:seed
+pnpm --filter @soro/api start
+```
 
-1. `RUN DEMO` on `demo-balance-pidgin` → `CALL_CONNECTED` (DEMO).
-2. Customer line: *"Abeg, how much dey my account?"*
-3. Command Center: `LANGUAGE_DETECTED pcm` → `INTENT_RESOLVED GET_BALANCE`
-   → `VALIDATION_COMPLETED` (all gates pass) → journey spine advances.
-4. `BANKING_REQUESTED` → `DemoBankingProvider` → `BANKING_RESPONSE_RECEIVED`
-   (₦125,000.00, `simulated: true`).
-5. Ayo line (Pidgin): balance + DEMO labelling.
-6. `TRANSACTION_SUCCESS`; timeline complete; DEMO MODE badge visible
-   throughout. Seed data for this exact run: `packages/db/sql/seeds/demo.sql`.
+Then:
 
-Backup journeys: Yoruba balance, transaction history (canned 3-item
-history), and a held-transfer showing confirmation + masked DTMF
-authorization (safe even on a live stage).
+```bash
+curl -s -X POST localhost:3000/api/demo/run-scenario \
+  -H 'content-type: application/json' \
+  -d '{
+    "phone": "08030000001",
+    "turns": [
+      "Buy me 500 naira airtime",
+      "yes",
+      "How much money remain?"
+    ],
+    "demoPin": "1234"
+  }'
+```
 
-## 3. Live vs Demo distinguishability
+Expected: balance decreases ₦84,250 → ₦83,750, airtime purchase recorded,
+events persisted, transcript returned, all marked DEMO.
 
-`mode: DEMO` on every event/row, `simulated: true` on every demo banking
-response, `getModeBadge('DEMO')` honesty copy in the UI. Presenting
-simulated data as live is a show-stopper bug, not a shortcut.
+## Demo scenarios
 
-## 4. Fallback strategy
+- `?scenario=insufficient_funds` / `provider_timeout` / `transfer_pending` /
+  `transfer_failed` / `transfer_reversed` may be passed via the agent context
+  for deterministically failing demos.
 
-Live Mode attempted only if `isLiveReady()` passes; any failure 10
-minutes before stage time → Demo Mode, no exceptions. Demo needs nothing
-but the laptop: `pnpm db:seed && pnpm test` proves readiness.
+## Live phone demo
 
-## 5. Failure recovery on stage
+1. `cp .env.example .env` and fill `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`,
+   `TWILIO_PHONE_NUMBER`, `TWILIO_WEBHOOK_BASE_URL`.
+2. Expose the local server: `ngrok http 3000` (or cloudflared).
+3. Twilio console → Voice webhook → `POST https://<tunnel>/api/twilio/voice`.
+4. Call the Twilio number. Ayo greets, identifies you by phone number, takes
+   speech turns, and moves you into DTMF authorization for sensitive actions.
 
-Dropped demo step → `aborted` run, restart scenario (deterministic, safe
-to replay). Wrong audience answer → `UNKNOWN` hold path IS the demo of
-graceful failure. Never improvise provider data.
+## Judge checklist
 
-## 6. Deterministic scenarios (model REAL)
-
-`DemoScenario`/`DemoSession` in `@soro/types`: scripted steps with
-`expectedIntent` + `expectedOutcome` (`SUCCESS`/`FAILURE_HANDLED`/
-`BLOCKED`). Runner + scripts are PLANNED (Phase 1).
-
-## 7. Production note
-
-Demo Mode ships WITH production as the safe rehearsal/field-training
-environment — same pipeline, simulated provider, identical event trail.
+- [ ] `pnpm db:reset && pnpm db:seed` idempotent
+- [ ] `pnpm test` (86 tests), `pnpm typecheck`, `pnpm lint`, `pnpm build` green
+- [ ] Demo scenario returns real, updated balances
+- [ ] `GET /api/dashboard/customers/cust-daniel` shows accounts, calls, voice profile
+- [ ] `GET /api/events/stream` produces a live SSE feed during a call/demo

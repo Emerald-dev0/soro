@@ -66,3 +66,40 @@ types, 3 validation gates, transaction state machine, typed events,
 SQLite store, Demo adapter, journey spine — 47/47 tests, typecheck, lint,
 and build green. No live integrations: Twilio NOT YET TESTED, Wema NOT
 VERIFIED, no model wired. See `docs/LIMITATIONS.md`.
+
+---
+
+## Phase 1 backend (hackathon build) — READY
+
+What now works end-to-end:
+
+- `MockBankingCore` (real persisted state: balances, transfers, airtime,
+  data plans, statements) — `packages/banking/src/mock-core.ts`
+- Deterministic DTMF PIN authorization with attempt locking —
+  `services/security/src/index.ts`
+- Tool registry with permission envelopes (AI cannot bypass backend policy) —
+  `services/agent/src/tools.ts`
+- Fastify API: `/health`, `/api/dashboard/*`, `/api/events/stream` (SSE),
+  Twilio webhooks (`/api/twilio/voice|gather|dtmf|status`) with signature
+  validation, deterministic demo runner `/api/demo/run-scenario` —
+  `apps/api/src/*`
+
+Run it:
+
+```bash
+pnpm install
+pnpm db:reset && pnpm db:seed
+pnpm --filter @soro/api start        # http://localhost:3000
+curl -s localhost:3000/health
+curl -s -X POST localhost:3000/api/demo/run-scenario \
+  -H 'content-type: application/json' \
+  -d '{"phone":"08030000001","turns":["Buy me 500 naira airtime","yes","How much money remain?"],"demoPin":"1234"}'
+```
+
+Demo accounts: Daniel `08030000001` (₦84,250) · Aisha `08030000002` (₦125,600).
+Demo PINs (keypad authorization only, never sent to the LLM): Daniel `1234`,
+Aisha `4321`.
+
+Demo: SIMULATED banking data, real engine path. **DEMO_MODE=true** labels all
+simulated responses. Twilio live calls require `TWILIO_*` env vars and a
+public webhook URL (ngrok/cloudflared); see `docs/TWILIO.md`.

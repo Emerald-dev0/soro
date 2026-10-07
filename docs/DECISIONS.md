@@ -82,3 +82,15 @@ Context: proper dist-first publishing needs references + export maps.
 Decision: `main: src/index.ts` for the foundation; revisit with project
 references in Phase 1. Consequence: simpler Phase 0; packaging hardening
 is tracked follow-up, not hidden debt.
+
+## ADR-0013 — Phase 1 runtime: node:sqlite retained, Fastify+tsx API layer (2026-10-07)
+
+Context: the hackathon brief suggested PostgreSQL/Neon + Prisma, while Phase 0
+already decided SQLite (ADR-0010) with a repository seam for a later move.
+No managed Postgres credentials exist locally, and Neon requires a hosted URL.
+Decision: keep `node:sqlite` as the runtime store (Neon/Postgres migration
+remains a documented follow-up via DATABASE_URL), add Fastify + tsx for the
+HTTP/webhook layer, and implement Twilio signature validation with the
+official `twilio` SDK. Consequence: the full backend runs locally with zero
+external setup; the banking core persists REAL state (balances, ledgers,
+calls, events) in a local SQLite file.
