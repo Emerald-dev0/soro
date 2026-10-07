@@ -152,3 +152,4 @@ export function createBankingProvider(
   throw new Error(`Unknown banking provider: ${String(name)}`);
 }
 export * from "./mock-core.js";
+export * from "./statement.js";

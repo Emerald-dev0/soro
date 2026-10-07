@@ -7,6 +7,14 @@ import { handleVoiceTurn, executePendingTool, type AgentContext } from '@soro/se
 import { authorizeWithDtmfPin } from '@soro/service-security';
 import { broadcastEvent } from './events.routes.js';
 
+const seenEvents = new Set<string>();
+function publishSessionEvents(db: Database, sessionId: string): void {
+  const rows = db.prepare(`SELECT * FROM events WHERE session_id=? ORDER BY created_at`).all(sessionId) as { id: string }[];
+  for (const row of rows) {
+    if (!seenEvents.has(row.id)) { seenEvents.add(row.id); broadcastEvent(row); }
+  }
+}
+
 /**
  * Deterministic Demo Mode — runs the FULL Soro pipeline with the mock
  * banking core over simulated DTMF. Exactly labels every result DEMO.
@@ -55,6 +63,7 @@ export function demoRoutes(app: FastifyInstance, db: Database, core: MockBanking
       }
       addMessage(db, { id: randomUUID(), callSessionId: callId, sender: 'AYO', content: replyText, createdAt: new Date().toISOString() });
       transcript.push({ sender: 'CUSTOMER', text: turn }, { sender: 'AYO', text: replyText });
+      publishSessionEvents(db, callId);
 
       // Follow-up balance question answers the REAL state
       if (/balance|how much/i.test(turn)) {
@@ -64,7 +73,7 @@ export function demoRoutes(app: FastifyInstance, db: Database, core: MockBanking
     }
 
     updateCall(db, callId, { status: 'COMPLETED', endedAt: new Date().toISOString() });
-    broadcastEvent({ sessionId: callId, transcript });
+    publishSessionEvents(db, callId);
     return {
       success: true,
       data: { mode: 'DEMO', callId, transcript, messages: listMessagesForCall(db, callId) },

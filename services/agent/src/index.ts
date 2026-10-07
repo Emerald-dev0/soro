@@ -1,7 +1,8 @@
 import { randomUUID } from 'node:crypto';
 import type { Database } from '@soro/db';
-import { MockBankingCore } from '@soro/banking';
+import { generateStatement, sendStatementEmail, MockBankingCore } from '@soro/banking';
 import { addMessage, recordEventSnapshot } from './events.js';
+import { createSupportCase, listAccountsForCustomer, listBeneficiaries, getAccountByNumber, updateCall } from '@soro/db';
 import { TOOL_REGISTRY, getToolDefinition, type ToolDefinition } from './tools.js';
 import { understandUtterance } from './nl.js';
 
@@ -141,26 +142,58 @@ async function runTool(ctx: AgentContext, name: string, args: Record<string, str
       return `Transfer successful. Reference ${txn.reference}.`;
     }
     case 'getTransferStatus': {
-      return 'Enter the transfer reference and I will check its status.';
+      const ref = (args['reference'] as string) ?? '';
+      const txn = ctx.core.getTransaction(ref);
+      if (!txn) return 'I could not find that transaction reference.';
+      return `Transaction ${ref} is ${txn.status}.`;
     }
     case 'generateStatement': {
-      const txns = ctx.core.getRecentTransactions(ctx.accountId, 20);
-      return `Statement for the last ${txns.length} transactions: ` + txns.map((t) => `${t.createdAt.slice(0, 10)} ${t.type} ₦${t.amountMinor / 100} ${t.status}`).join('; ');
+      const account = ctx.core.getAccountBalance(ctx.accountId);
+      const nowIso = new Date().toISOString();
+      const from = new Date(Date.now() - 30 * 24 * 3600 * 1000).toISOString();
+      const stmt = generateStatement(ctx.db, { accountId: account.id, accountNumber: account.accountNumber, customerId: account.customerId, fromIso: from, toIso: nowIso });
+      return `Statement for the last 30 days with ${stmt.transactions.length} transactions: ${stmt.bodyPreview.split('\n').slice(0, 5).join('; ')}`;
     }
     case 'sendStatementEmail': {
-      return 'Your statement has been sent to your registered email address.';
+      const account = ctx.core.getAccountBalance(ctx.accountId);
+      const nowIso = new Date().toISOString();
+      const from = new Date(Date.now() - 30 * 24 * 3600 * 1000).toISOString();
+      const stmt = generateStatement(ctx.db, { accountId: account.id, accountNumber: account.accountNumber, customerId: account.customerId, fromIso: from, toIso: nowIso });
+      const customer = ctx.db.prepare(`SELECT email FROM customers WHERE id=?`).get(ctx.customerId!) as { email: string };
+      const sent = sendStatementEmail(ctx.db, { toAddress: customer.email, subject: 'Soro Statement', statement: stmt });
+      recordEventSnapshot(ctx.db, ctx.callSessionId, 'STATEMENT_EMAIL_SENT', { emailId: sent.id });
+      return `Your statement has been sent to ${customer.email}.`;
     }
     case 'createSupportCase': {
-      return 'I have logged a support case for you. A team member will follow up.';
+      const category = (args['category'] as string) ?? 'GENERAL_SUPPORT';
+      const acct = ctx.accountId ? listAccountsForCustomer(ctx.db, ctx.customerId!).find((a) => a.id === ctx.accountId) : undefined;
+      createSupportCase(ctx.db, {
+        id: randomUUID(), customerId: ctx.customerId, accountId: ctx.accountId, callSessionId: ctx.callSessionId,
+        category: category as never, description: (args['description'] as string) ?? 'Customer reported an issue via voice call.',
+        priority: 'MEDIUM', status: 'OPEN', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
+      });
+      recordEventSnapshot(ctx.db, ctx.callSessionId, 'SUPPORT_CASE_CREATED', { category });
+      return 'I have logged a support case for you. Reference ' + (acct?.id ?? 'n/a') + '.';
     }
     case 'escalateToHuman': {
-      return 'I will connect you to a human agent. Your case has been created.';
+      createSupportCase(ctx.db, {
+        id: randomUUID(), customerId: ctx.customerId, accountId: ctx.accountId, callSessionId: ctx.callSessionId,
+        category: 'GENERAL_SUPPORT', description: 'Customer requested human assistance.', priority: 'HIGH', status: 'ESCALATED',
+        createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
+      });
+      updateCall(ctx.db, ctx.callSessionId, { status: 'ESCALATED', escalationStatus: 'ESCALATED' });
+      recordEventSnapshot(ctx.db, ctx.callSessionId, 'HUMAN_ESCALATION', {});
+      return 'I have escalated this to a human agent. Your case has been created.';
     }
     case 'getBeneficiaries': {
-      return 'You have beneficiaries saved. Ask me for a transfer to send money.';
+      const list = listBeneficiaries(ctx.db, ctx.customerId!);
+      if (list.length === 0) return 'You have no saved beneficiaries.';
+      return 'Your beneficiaries: ' + list.map((b) => `${b.name} (${b.bankName} ${b.accountNumber})`).join(', ');
     }
     case 'verifyBeneficiary': {
-      return 'Beneficiary verification requires the account number.';
+      const acct = args['account_number'] ? getAccountByNumber(ctx.db, args['account_number'] as string) : undefined;
+      if (!acct) return 'I could not verify that account number.';
+      return `Account ${args['account_number']} is verified and active.`;
     }
     default:
       return 'I cannot do that yet.';

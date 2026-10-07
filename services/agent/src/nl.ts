@@ -51,12 +51,13 @@ export function understandUtterance(text: string): DetectedUtterance {
 
   let intent: Intent = 'UNKNOWN';
   if (/balance|how much (money |)remain|iye.*account|how much.*account|how much dey/.test(t)) intent = 'GET_BALANCE';
+  else if (/email.*statement|send.*statement|statement.*email/.test(t)) intent = 'SEND_STATEMENT_EMAIL';
   else if (/transaction|statement|history|what did i|what transactions|spend today/.test(t)) intent = 'GET_TRANSACTION_HISTORY';
   else if (/transfer|send \d|send .*(money|naira)|pay .* to|wallimini|wire/.test(t)) intent = 'TRANSFER_MONEY';
   else if (/airtime|recharge|top ?up|buy me \d+ naira airtime/.test(t)) intent = 'PURCHASE_AIRTIME';
   else if (/data/.test(t) && /(plan|recommend|best|which|find me)/.test(t)) intent = 'RECOMMEND_DATA_PLAN';
   else if (/data|buy me.*data|purchase data|need data/.test(t)) intent = 'PURCHASE_DATA';
-  else if (/statement|email.*statement|send.*statement/.test(t)) intent = 'GET_STATEMENT';
+  else if (/statement/.test(t)) intent = 'GET_STATEMENT';
   else if (/beneficiar|recipient|my brother|my mum|my mother|my sister/.test(t)) intent = t.includes('send') || t.includes('transfer') ? 'TRANSFER_MONEY' : 'GET_BENEFICIARIES';
   else if (/speak to someone|human|agent|escalate|customer care/.test(t)) intent = 'ESCALATE_TO_HUMAN';
   else if (/complain|not recognize|don't recognize|i don t recognize|fraud|suspicious/.test(t)) intent = 'CREATE_SUPPORT_CASE';

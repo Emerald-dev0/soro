@@ -9,6 +9,15 @@ import { MockBankingCore } from '@soro/banking';
 import { handleVoiceTurn, type AgentContext } from '@soro/service-agent';
 import { authorizeWithDtmfPin } from '@soro/service-security';
 import { isValidTwilioRequest, sayGatherXml, gatherDtmfXml } from './twilio.util.js';
+import { broadcastEvent } from './events.routes.js';
+
+const published = new Set<string>();
+function publish(db: Database, sessionId: string): void {
+  try {
+    const rows = db.prepare(`SELECT * FROM events WHERE session_id=? ORDER BY created_at`).all(sessionId) as { id: string }[];
+    for (const row of rows) if (!published.has(row.id)) { published.add(row.id); broadcastEvent(row); }
+  } catch { /* ignore */ }
+}
 
 /**
  * Live voice flow:
@@ -60,6 +69,7 @@ export function twilioGatherRoute(app: FastifyInstance, db: Database, core: Mock
     const ctx: AgentContext = buildAgentContext(db, core, callId);
     const turn = await handleVoiceTurn(ctx, speech);
     addMessage(db, { id: randomUUID(), callSessionId: callId, sender: 'AYO', content: turn.reply, createdAt: new Date().toISOString() });
+    publish(db, callId);
 
     if (turn.requiresDtmf) {
       return reply.header('Content-Type', 'text/xml').send(gatherDtmfXml(turn.reply, `${process.env.TWILIO_WEBHOOK_BASE_URL}/api/twilio/dtmf?callId=${callId}`));

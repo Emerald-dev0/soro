@@ -9,6 +9,7 @@ import { twilioVoiceRoute, twilioGatherRoute, twilioDtmfRoute, twilioStatusRoute
 import { dashboardRoutes } from './dashboard.routes.js';
 import { sseRoutes } from './events.routes.js';
 import { demoRoutes } from './demo.routes.js';
+import { authRoutes } from './auth.routes.js';
 import { healthRoutes } from './health.routes.js';
 
 export interface AppContext {
@@ -34,6 +35,7 @@ export function buildApp(): ReturnType<typeof Fastify> {
   dashboardRoutes(app, database, core);
   sseRoutes(app);
   demoRoutes(app, database, core);
+  authRoutes(app, database);
 
   app.addHook('onResponse', async (req) => {
     req.log.info({ requestId: (req as unknown as { id_: string }).id_ }, 'request complete');

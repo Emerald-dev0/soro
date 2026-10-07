@@ -30,7 +30,7 @@ export const TOOL_REGISTRY: ToolDefinition[] = [
   { name: 'createTransfer', description: 'Transfer money to a beneficiary.', requiresAuthentication: true, requiresConfirmation: true, requiresAuthorization: true, riskLevel: 'HIGH', intent: 'TRANSFER_MONEY' },
   { name: 'getTransferStatus', description: 'Check a transfer reference.', requiresAuthentication: true, requiresConfirmation: false, requiresAuthorization: false, riskLevel: 'LOW', intent: 'GET_TRANSFER_STATUS' },
   { name: 'generateStatement', description: 'Generate an account statement.', requiresAuthentication: true, requiresConfirmation: false, requiresAuthorization: false, riskLevel: 'LOW', intent: 'GET_STATEMENT' },
-  { name: 'sendStatementEmail', description: 'Email an account statement to the registered address.', requiresAuthentication: true, requiresConfirmation: true, requiresAuthorization: false, riskLevel: 'MEDIUM', intent: 'GET_STATEMENT' },
+  { name: 'sendStatementEmail', description: 'Email an account statement to the registered address.', requiresAuthentication: true, requiresConfirmation: true, requiresAuthorization: false, riskLevel: 'MEDIUM', intent: 'SEND_STATEMENT_EMAIL' },
   { name: 'createSupportCase', description: 'Open a support case.', requiresAuthentication: true, requiresConfirmation: false, requiresAuthorization: false, riskLevel: 'LOW', intent: 'CREATE_SUPPORT_CASE' },
   { name: 'escalateToHuman', description: 'Escalate to a human support case.', requiresAuthentication: true, requiresConfirmation: false, requiresAuthorization: false, riskLevel: 'LOW', intent: 'ESCALATE_TO_HUMAN' },
 ];

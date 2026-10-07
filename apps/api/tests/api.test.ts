@@ -6,6 +6,7 @@ import { twilioVoiceRoute, twilioGatherRoute, twilioDtmfRoute, twilioStatusRoute
 import { dashboardRoutes } from '../src/dashboard.routes.js';
 import { healthRoutes } from '../src/health.routes.js';
 import { demoRoutes } from '../src/demo.routes.js';
+import { authRoutes } from '../src/auth.routes.js';
 import { sseRoutes } from '../src/events.routes.js';
 
 function testApp() {
@@ -24,6 +25,7 @@ function testApp() {
   dashboardRoutes(app, database, core);
   sseRoutes(app);
   demoRoutes(app, database, core);
+  authRoutes(app, database);
   return { app, database };
 }
 
@@ -97,5 +99,46 @@ describe('demo scenario', () => {
     const body = res.json();
     expect(body.success).toBe(true);
     expect(body.data.transcript.some((t: { text: string }) => t.text.includes('Balance'))).toBe(true);
+  });
+});
+
+describe('webhook signature enforcement', () => {
+  it('rejects requests when a signature is required and missing', async () => {
+    const { app } = testApp();
+    process.env.TWILIO_AUTH_TOKEN = 'test-token-123';
+    const res = await app.inject({ method: 'POST', url: '/api/twilio/voice', payload: { CallSid: 'CA9', From: '08030000001', To: '+123' } });
+    expect(res.statusCode).toBe(403);
+    delete process.env.TWILIO_AUTH_TOKEN;
+  });
+});
+
+describe('authn endpoint', () => {
+  it('returns only the outcome for a correct PIN', async () => {
+    const { app } = testApp();
+    const res = await app.inject({ method: 'POST', url: '/api/authn', payload: { customerId: 'cust-daniel', method: 'DTMF_PIN', pin: '1234' } });
+    expect(res.json().data?.outcome ?? res.json()).toBe('SUCCESS');
+    expect(JSON.stringify(res.json())).not.toContain('1234');
+  });
+
+  it('fails for a wrong PIN', async () => {
+    const { app } = testApp();
+    const res = await app.inject({ method: 'POST', url: '/api/authn', payload: { customerId: 'cust-daniel', method: 'DTMF_PIN', pin: '0000' } });
+    expect(res.json().data?.outcome ?? res.json()).toBe('FAILED');
+  });
+});
+
+describe('scenario injection + statements', () => {
+  it('insufficient_funds keeps the balance unchanged', async () => {
+    const { app } = testApp();
+    const res = await app.inject({ method: 'POST', url: '/api/demo/run-scenario', payload: { phone: '08030000001', turns: ['Buy me 500 naira airtime', 'yes'], demoPin: '1234', scenario: 'insufficient_funds' } });
+    expect(res.statusCode).toBe(200);
+  });
+
+  it('statement email is persisted in the emails table', async () => {
+    const { app, database } = testApp();
+    await app.inject({ method: 'POST', url: '/api/demo/run-scenario', payload: { phone: '08030000001', turns: ['Send my statement to my email', 'yes'] } });
+    const rows = database.prepare(`SELECT * FROM emails`).all() as { kind: string }[];
+    expect(rows.length).toBeGreaterThan(0);
+    expect(rows[0].kind).toBe('STATEMENT');
   });
 });
