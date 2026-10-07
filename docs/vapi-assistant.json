@@ -48,7 +48,7 @@
           }
         },
         "server": {
-          "url": "undefined/api/vapi/webhook"
+          "url": "https://rind-upwind-esquire.ngrok-free.dev/api/vapi/webhook"
         }
       },
       {
@@ -88,7 +88,7 @@
           }
         },
         "server": {
-          "url": "undefined/api/vapi/webhook"
+          "url": "https://rind-upwind-esquire.ngrok-free.dev/api/vapi/webhook"
         }
       },
       {
@@ -128,7 +128,7 @@
           }
         },
         "server": {
-          "url": "undefined/api/vapi/webhook"
+          "url": "https://rind-upwind-esquire.ngrok-free.dev/api/vapi/webhook"
         }
       },
       {
@@ -168,7 +168,7 @@
           }
         },
         "server": {
-          "url": "undefined/api/vapi/webhook"
+          "url": "https://rind-upwind-esquire.ngrok-free.dev/api/vapi/webhook"
         }
       },
       {
@@ -208,7 +208,7 @@
           }
         },
         "server": {
-          "url": "undefined/api/vapi/webhook"
+          "url": "https://rind-upwind-esquire.ngrok-free.dev/api/vapi/webhook"
         }
       },
       {
@@ -248,7 +248,7 @@
           }
         },
         "server": {
-          "url": "undefined/api/vapi/webhook"
+          "url": "https://rind-upwind-esquire.ngrok-free.dev/api/vapi/webhook"
         }
       },
       {
@@ -288,7 +288,7 @@
           }
         },
         "server": {
-          "url": "undefined/api/vapi/webhook"
+          "url": "https://rind-upwind-esquire.ngrok-free.dev/api/vapi/webhook"
         }
       },
       {
@@ -328,7 +328,7 @@
           }
         },
         "server": {
-          "url": "undefined/api/vapi/webhook"
+          "url": "https://rind-upwind-esquire.ngrok-free.dev/api/vapi/webhook"
         }
       },
       {
@@ -368,7 +368,7 @@
           }
         },
         "server": {
-          "url": "undefined/api/vapi/webhook"
+          "url": "https://rind-upwind-esquire.ngrok-free.dev/api/vapi/webhook"
         }
       },
       {
@@ -408,7 +408,7 @@
           }
         },
         "server": {
-          "url": "undefined/api/vapi/webhook"
+          "url": "https://rind-upwind-esquire.ngrok-free.dev/api/vapi/webhook"
         }
       },
       {
@@ -448,7 +448,7 @@
           }
         },
         "server": {
-          "url": "undefined/api/vapi/webhook"
+          "url": "https://rind-upwind-esquire.ngrok-free.dev/api/vapi/webhook"
         }
       },
       {
@@ -488,7 +488,7 @@
           }
         },
         "server": {
-          "url": "undefined/api/vapi/webhook"
+          "url": "https://rind-upwind-esquire.ngrok-free.dev/api/vapi/webhook"
         }
       },
       {
@@ -528,7 +528,7 @@
           }
         },
         "server": {
-          "url": "undefined/api/vapi/webhook"
+          "url": "https://rind-upwind-esquire.ngrok-free.dev/api/vapi/webhook"
         }
       },
       {
@@ -568,7 +568,7 @@
           }
         },
         "server": {
-          "url": "undefined/api/vapi/webhook"
+          "url": "https://rind-upwind-esquire.ngrok-free.dev/api/vapi/webhook"
         }
       },
       {
@@ -608,7 +608,7 @@
           }
         },
         "server": {
-          "url": "undefined/api/vapi/webhook"
+          "url": "https://rind-upwind-esquire.ngrok-free.dev/api/vapi/webhook"
         }
       },
       {
@@ -648,7 +648,7 @@
           }
         },
         "server": {
-          "url": "undefined/api/vapi/webhook"
+          "url": "https://rind-upwind-esquire.ngrok-free.dev/api/vapi/webhook"
         }
       }
     ]
