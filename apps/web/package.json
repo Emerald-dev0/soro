@@ -1,0 +1,20 @@
+{
+  "name": "@soro/web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Soro web app shell (Phase 0 — screens land in later phases)",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "dev": "echo \"web: Phase 0 shell (screens land in later phases)\"",
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint src tests",
+    "test": "vitest run tests src"
+  },
+  "dependencies": {
+    "@soro/types": "workspace:*",
+    "@soro/ui": "workspace:*"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "@soro/command-center",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Soro Command Center shell: journey model + operational state (UI lands in Phase 1)",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "dev": "echo \"command-center: Phase 0 shell (UI lands in Phase 1)\"",
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint src tests",
+    "test": "vitest run tests src"
+  },
+  "dependencies": {
+    "@soro/events": "workspace:*",
+    "@soro/types": "workspace:*",
+    "@soro/ui": "workspace:*"
+  }
+}

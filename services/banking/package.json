@@ -1,0 +1,20 @@
+{
+  "name": "@soro/service-banking",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Soro banking engine shell: provider selection boundary (Phase 0)",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "dev": "echo \"banking service: Phase 0 shell (engine lands in Phase 1)\"",
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint src tests",
+    "test": "vitest run tests src"
+  },
+  "dependencies": {
+    "@soro/banking": "workspace:*",
+    "@soro/types": "workspace:*"
+  }
+}

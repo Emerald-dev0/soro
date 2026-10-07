@@ -1,0 +1,20 @@
+{
+  "name": "@soro/service-orchestration",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Soro orchestrator shell: pipeline stages + transaction state machine (Phase 0)",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "dev": "echo \"orchestration: Phase 0 shell (orchestrator lands in Phase 1)\"",
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint src tests",
+    "test": "vitest run tests src"
+  },
+  "dependencies": {
+    "@soro/events": "workspace:*",
+    "@soro/types": "workspace:*"
+  }
+}

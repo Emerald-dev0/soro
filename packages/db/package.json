@@ -1,0 +1,21 @@
+{
+  "name": "@soro/db",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Soro local database: SQLite schema, migrations, typed client, seeds (Phase 0 foundation)",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "dependencies": {
+    "@soro/types": "workspace:*"
+  },
+  "scripts": {
+    "dev": "echo \"@soro/db: library package (no dev server)\"",
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint src tests",
+    "reset": "node ./scripts/reset.js",
+    "seed": "node ./scripts/seed.js",
+    "test": "vitest run tests src"
+  }
+}

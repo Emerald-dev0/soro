@@ -1,0 +1,38 @@
+{
+  "name": "soro",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Soro — conversational banking access layer (Phase 0: local foundation)",
+  "packageManager": "pnpm@11.22.0",
+  "engines": {
+    "node": ">=24.0.0",
+    "pnpm": ">=10.0.0"
+  },
+  "scripts": {
+    "dev": "pnpm -r --parallel dev",
+    "build": "pnpm -r build",
+    "typecheck": "tsc --noEmit -p tsconfig.json && pnpm -r typecheck",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "db:reset": "pnpm --filter @soro/db reset",
+    "db:seed": "pnpm --filter @soro/db seed"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.18.0",
+    "@soro/banking": "workspace:*",
+    "@soro/config": "workspace:*",
+    "@soro/db": "workspace:*",
+    "@soro/events": "workspace:*",
+    "@soro/service-banking": "workspace:*",
+    "@soro/service-events": "workspace:*",
+    "@soro/service-orchestration": "workspace:*",
+    "@soro/types": "workspace:*",
+    "@soro/validation": "workspace:*",
+    "@types/node": "^24.0.0",
+    "eslint": "^9.18.0",
+    "typescript": "~5.9.2",
+    "typescript-eslint": "^8.20.0",
+    "vitest": "^3.2.4"
+  }
+}

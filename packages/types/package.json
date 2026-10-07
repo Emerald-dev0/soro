@@ -1,0 +1,16 @@
+{
+  "name": "@soro/types",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Soro shared domain types — the common language of all services (Phase 0)",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "dev": "echo \"@soro/types: shared types package (no dev server)\"",
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint src tests",
+    "test": "vitest run tests src"
+  }
+}

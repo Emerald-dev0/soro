@@ -1,0 +1,9 @@
+packages:
+  - 'apps/*'
+  - 'services/*'
+  - 'packages/*'
+
+# Build scripts approved to run on `pnpm install` (supply-chain hygiene:
+# nothing else is allowed to execute install-time code).
+allowBuilds:
+  'esbuild': true
