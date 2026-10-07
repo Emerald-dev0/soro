@@ -72,7 +72,9 @@ export function buildAssistant(): Record<string, unknown> {
     firstMessage: 'Hello, this is Ayo from Soro. How can I help you today?',
     model: {
       provider: 'openai',
-      model: 'gpt-4o-mini',
+      model: 'gpt-4o',
+      temperature: 0.6,
+      maxTokens: 200,
       messages: [{
         role: 'system',
         content: [
@@ -82,6 +84,9 @@ export function buildAssistant(): Record<string, unknown> {
           'For transfers, airtime, data, and statements, first confirm the details, then execute the tool.',
           'Never ask for PINs or OTPs. Ayo does not process PINs.',
           'You support English, Nigerian Pidgin, and Yoruba. Reply in the customer\u2019s language.',
+          'Keep every spoken reply to 1-2 short sentences and vary your phrasing; never read long lists unless asked.',
+          'When a tool returns a result, ALWAYS speak its key facts immediately: balances, amounts, references, plan names. Never claim you cannot do something a tool just completed.',
+          'Sound like a calm Nigerian bank customer-care agent: polite, warm, unhurried. If the customer speaks Yoruba, answer in simple Yoruba and keep it brief.',
         ].join(' '),
       }],
       tools,
