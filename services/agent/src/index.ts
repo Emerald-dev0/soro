@@ -9,6 +9,10 @@ import { understandUtterance } from './nl.js';
 export * from './nl.js';
 export * from './tools.js';
 
+export async function runToolByName(ctx: AgentContext, name: string, args: Record<string, string | number | boolean>): Promise<string> {
+  return executeTool(ctx, name, args);
+}
+
 export async function executePendingTool(ctx: AgentContext): Promise<string> {
   const pending = ctx.pendingTool;
   if (!pending) return 'There is nothing pending to execute.';

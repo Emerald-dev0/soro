@@ -7,6 +7,7 @@ import { dashboardRoutes } from '../src/dashboard.routes.js';
 import { healthRoutes } from '../src/health.routes.js';
 import { demoRoutes } from '../src/demo.routes.js';
 import { authRoutes } from '../src/auth.routes.js';
+import { vapiRoutes } from '../src/vapi.routes.js';
 import { voiceIdentityRoutes } from '../src/voice-identity.routes.js';
 import { DemoVoiceIdentityProvider } from '@soro/service-security';
 import { sseRoutes } from '../src/events.routes.js';
@@ -28,6 +29,7 @@ function testApp() {
   sseRoutes(app);
   demoRoutes(app, database, core);
   authRoutes(app, database);
+  vapiRoutes(app, database, core);
   voiceIdentityRoutes(app, database, new DemoVoiceIdentityProvider(database));
   return { app, database };
 }
@@ -151,5 +153,23 @@ describe('scenario injection + statements', () => {
     const rows = database.prepare(`SELECT * FROM emails`).all() as { kind: string }[];
     expect(rows.length).toBeGreaterThan(0);
     expect(rows[0].kind).toBe('STATEMENT');
+  });
+});
+
+describe('vapi webhook', () => {
+  it('returns an assistant config on assistant-request', async () => {
+    const { app } = testApp();
+    const res = await app.inject({ method: 'POST', url: '/api/vapi/webhook', payload: { message: { type: 'assistant-request', call: { id: 'vc1' } } } });
+    expect(res.statusCode).toBe(200);
+    expect(res.json().assistant.name).toBe('Ayo — Soro Banking');
+  });
+
+  it('dispatches tool calls to the real banking core', async () => {
+    const { app } = testApp();
+    const res = await app.inject({ method: 'POST', url: '/api/vapi/webhook', payload: { message: { type: 'tool-calls', call: { id: 'vc2' }, toolCallList: [{ id: 't1', name: 'getAccountBalance', parameters: {} }] } } });
+    expect(res.statusCode).toBe(200);
+    const results = res.json().results;
+    expect(results[0].toolCallId).toBe('t1');
+    expect(results[0].result).toContain('balance');
   });
 });
