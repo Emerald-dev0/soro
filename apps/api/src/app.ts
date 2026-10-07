@@ -12,6 +12,7 @@ import { demoRoutes } from './demo.routes.js';
 import { authRoutes } from './auth.routes.js';
 import { voiceIdentityRoutes } from './voice-identity.routes.js';
 import { vapiRoutes } from './vapi.routes.js';
+import { authorizeRoutes } from './authorize.routes.js';
 import { DemoVoiceIdentityProvider } from '@soro/service-security';
 import { healthRoutes } from './health.routes.js';
 import { installRateLimit } from './rate-limit.js';
@@ -44,6 +45,7 @@ export function buildApp(): ReturnType<typeof Fastify> {
   demoRoutes(app, database, core);
   authRoutes(app, database);
   vapiRoutes(app, database, core);
+  authorizeRoutes(app, database);
   voiceIdentityRoutes(app, database, new DemoVoiceIdentityProvider(database));
 
   app.addHook('onResponse', async (req) => {

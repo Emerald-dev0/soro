@@ -13,6 +13,7 @@ export function vapiRoutes(app: FastifyInstance, db: Database, core: MockBanking
   app.post('/api/vapi/webhook', async (req) => {
     const body = req.body as { message?: { type?: string; call?: { id?: string; customer?: { number?: string } }; toolCallList?: { id: string; name: string; parameters?: Record<string, unknown> }[]; assistant?: unknown; status?: string } } | undefined;
     const msg = (body?.message ?? {}) as { type?: string; call?: { id?: string; customer?: { number?: string } }; toolCallList?: { id: string; name: string; parameters?: Record<string, unknown> }[]; status?: string };
+    console.log('[vapi] type=', msg.type, 'tools=', (msg.toolCallList ?? []).map((t) => t.name).join(','));
     const callId = msg.call?.id ?? 'vapi-unknown';
 
     if (msg.type === 'tool-calls') {
@@ -47,7 +48,7 @@ export function vapiRoutes(app: FastifyInstance, db: Database, core: MockBanking
   });
 }
 
-function buildAssistant(): Record<string, unknown> {
+export function buildAssistant(): Record<string, unknown> {
   const tools = TOOL_REGISTRY.map((t) => ({
     type: 'function',
     function: {

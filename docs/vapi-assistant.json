@@ -1,0 +1,665 @@
+{
+  "name": "Ayo — Soro Banking",
+  "firstMessage": "Hello, this is Ayo from Soro. How can I help you today?",
+  "model": {
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are Ayo, a calm and concise conversational banking assistant for Soro. You help customers check balances, buy airtime/data, transfer money, view transactions, and get statements. You MUST call the provided tools for any banking fact or action — never invent balances or transaction results. For transfers, airtime, data, and statements, first confirm the details, then execute the tool. Never ask for PINs or OTPs. Ayo does not process PINs. You support English, Nigerian Pidgin, and Yoruba. Reply in the customer’s language."
+      }
+    ],
+    "tools": [
+      {
+        "type": "function",
+        "function": {
+          "name": "getAccountBalance",
+          "description": "Get the authenticated account balance.",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "amount_minor": {
+                "type": "number",
+                "description": "Amount in kobo (₦1 = 100 kobo)"
+              },
+              "network": {
+                "type": "string",
+                "enum": [
+                  "MTN",
+                  "AIRTEL",
+                  "GLO",
+                  "9MOBILE"
+                ]
+              },
+              "reference": {
+                "type": "string",
+                "description": "Transfer reference"
+              },
+              "account_number": {
+                "type": "string",
+                "description": "Destination account number"
+              },
+              "description": {
+                "type": "string",
+                "description": "Issue description"
+              }
+            }
+          }
+        },
+        "server": {
+          "url": "undefined/api/vapi/webhook"
+        }
+      },
+      {
+        "type": "function",
+        "function": {
+          "name": "getRecentTransactions",
+          "description": "List recent transactions.",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "amount_minor": {
+                "type": "number",
+                "description": "Amount in kobo (₦1 = 100 kobo)"
+              },
+              "network": {
+                "type": "string",
+                "enum": [
+                  "MTN",
+                  "AIRTEL",
+                  "GLO",
+                  "9MOBILE"
+                ]
+              },
+              "reference": {
+                "type": "string",
+                "description": "Transfer reference"
+              },
+              "account_number": {
+                "type": "string",
+                "description": "Destination account number"
+              },
+              "description": {
+                "type": "string",
+                "description": "Issue description"
+              }
+            }
+          }
+        },
+        "server": {
+          "url": "undefined/api/vapi/webhook"
+        }
+      },
+      {
+        "type": "function",
+        "function": {
+          "name": "getTransaction",
+          "description": "Get one transaction by reference.",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "amount_minor": {
+                "type": "number",
+                "description": "Amount in kobo (₦1 = 100 kobo)"
+              },
+              "network": {
+                "type": "string",
+                "enum": [
+                  "MTN",
+                  "AIRTEL",
+                  "GLO",
+                  "9MOBILE"
+                ]
+              },
+              "reference": {
+                "type": "string",
+                "description": "Transfer reference"
+              },
+              "account_number": {
+                "type": "string",
+                "description": "Destination account number"
+              },
+              "description": {
+                "type": "string",
+                "description": "Issue description"
+              }
+            }
+          }
+        },
+        "server": {
+          "url": "undefined/api/vapi/webhook"
+        }
+      },
+      {
+        "type": "function",
+        "function": {
+          "name": "getDataPlans",
+          "description": "List data plans, optionally by network.",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "amount_minor": {
+                "type": "number",
+                "description": "Amount in kobo (₦1 = 100 kobo)"
+              },
+              "network": {
+                "type": "string",
+                "enum": [
+                  "MTN",
+                  "AIRTEL",
+                  "GLO",
+                  "9MOBILE"
+                ]
+              },
+              "reference": {
+                "type": "string",
+                "description": "Transfer reference"
+              },
+              "account_number": {
+                "type": "string",
+                "description": "Destination account number"
+              },
+              "description": {
+                "type": "string",
+                "description": "Issue description"
+              }
+            }
+          }
+        },
+        "server": {
+          "url": "undefined/api/vapi/webhook"
+        }
+      },
+      {
+        "type": "function",
+        "function": {
+          "name": "recommendDataPlan",
+          "description": "Recommend the best data plan for a budget/network.",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "amount_minor": {
+                "type": "number",
+                "description": "Amount in kobo (₦1 = 100 kobo)"
+              },
+              "network": {
+                "type": "string",
+                "enum": [
+                  "MTN",
+                  "AIRTEL",
+                  "GLO",
+                  "9MOBILE"
+                ]
+              },
+              "reference": {
+                "type": "string",
+                "description": "Transfer reference"
+              },
+              "account_number": {
+                "type": "string",
+                "description": "Destination account number"
+              },
+              "description": {
+                "type": "string",
+                "description": "Issue description"
+              }
+            }
+          }
+        },
+        "server": {
+          "url": "undefined/api/vapi/webhook"
+        }
+      },
+      {
+        "type": "function",
+        "function": {
+          "name": "purchaseData",
+          "description": "Buy a data plan.",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "amount_minor": {
+                "type": "number",
+                "description": "Amount in kobo (₦1 = 100 kobo)"
+              },
+              "network": {
+                "type": "string",
+                "enum": [
+                  "MTN",
+                  "AIRTEL",
+                  "GLO",
+                  "9MOBILE"
+                ]
+              },
+              "reference": {
+                "type": "string",
+                "description": "Transfer reference"
+              },
+              "account_number": {
+                "type": "string",
+                "description": "Destination account number"
+              },
+              "description": {
+                "type": "string",
+                "description": "Issue description"
+              }
+            }
+          }
+        },
+        "server": {
+          "url": "undefined/api/vapi/webhook"
+        }
+      },
+      {
+        "type": "function",
+        "function": {
+          "name": "getAirtimeOptions",
+          "description": "List airtime denominations.",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "amount_minor": {
+                "type": "number",
+                "description": "Amount in kobo (₦1 = 100 kobo)"
+              },
+              "network": {
+                "type": "string",
+                "enum": [
+                  "MTN",
+                  "AIRTEL",
+                  "GLO",
+                  "9MOBILE"
+                ]
+              },
+              "reference": {
+                "type": "string",
+                "description": "Transfer reference"
+              },
+              "account_number": {
+                "type": "string",
+                "description": "Destination account number"
+              },
+              "description": {
+                "type": "string",
+                "description": "Issue description"
+              }
+            }
+          }
+        },
+        "server": {
+          "url": "undefined/api/vapi/webhook"
+        }
+      },
+      {
+        "type": "function",
+        "function": {
+          "name": "purchaseAirtime",
+          "description": "Buy airtime.",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "amount_minor": {
+                "type": "number",
+                "description": "Amount in kobo (₦1 = 100 kobo)"
+              },
+              "network": {
+                "type": "string",
+                "enum": [
+                  "MTN",
+                  "AIRTEL",
+                  "GLO",
+                  "9MOBILE"
+                ]
+              },
+              "reference": {
+                "type": "string",
+                "description": "Transfer reference"
+              },
+              "account_number": {
+                "type": "string",
+                "description": "Destination account number"
+              },
+              "description": {
+                "type": "string",
+                "description": "Issue description"
+              }
+            }
+          }
+        },
+        "server": {
+          "url": "undefined/api/vapi/webhook"
+        }
+      },
+      {
+        "type": "function",
+        "function": {
+          "name": "getBeneficiaries",
+          "description": "List saved beneficiaries.",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "amount_minor": {
+                "type": "number",
+                "description": "Amount in kobo (₦1 = 100 kobo)"
+              },
+              "network": {
+                "type": "string",
+                "enum": [
+                  "MTN",
+                  "AIRTEL",
+                  "GLO",
+                  "9MOBILE"
+                ]
+              },
+              "reference": {
+                "type": "string",
+                "description": "Transfer reference"
+              },
+              "account_number": {
+                "type": "string",
+                "description": "Destination account number"
+              },
+              "description": {
+                "type": "string",
+                "description": "Issue description"
+              }
+            }
+          }
+        },
+        "server": {
+          "url": "undefined/api/vapi/webhook"
+        }
+      },
+      {
+        "type": "function",
+        "function": {
+          "name": "verifyBeneficiary",
+          "description": "Verify a beneficiary account number.",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "amount_minor": {
+                "type": "number",
+                "description": "Amount in kobo (₦1 = 100 kobo)"
+              },
+              "network": {
+                "type": "string",
+                "enum": [
+                  "MTN",
+                  "AIRTEL",
+                  "GLO",
+                  "9MOBILE"
+                ]
+              },
+              "reference": {
+                "type": "string",
+                "description": "Transfer reference"
+              },
+              "account_number": {
+                "type": "string",
+                "description": "Destination account number"
+              },
+              "description": {
+                "type": "string",
+                "description": "Issue description"
+              }
+            }
+          }
+        },
+        "server": {
+          "url": "undefined/api/vapi/webhook"
+        }
+      },
+      {
+        "type": "function",
+        "function": {
+          "name": "createTransfer",
+          "description": "Transfer money to a beneficiary.",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "amount_minor": {
+                "type": "number",
+                "description": "Amount in kobo (₦1 = 100 kobo)"
+              },
+              "network": {
+                "type": "string",
+                "enum": [
+                  "MTN",
+                  "AIRTEL",
+                  "GLO",
+                  "9MOBILE"
+                ]
+              },
+              "reference": {
+                "type": "string",
+                "description": "Transfer reference"
+              },
+              "account_number": {
+                "type": "string",
+                "description": "Destination account number"
+              },
+              "description": {
+                "type": "string",
+                "description": "Issue description"
+              }
+            }
+          }
+        },
+        "server": {
+          "url": "undefined/api/vapi/webhook"
+        }
+      },
+      {
+        "type": "function",
+        "function": {
+          "name": "getTransferStatus",
+          "description": "Check a transfer reference.",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "amount_minor": {
+                "type": "number",
+                "description": "Amount in kobo (₦1 = 100 kobo)"
+              },
+              "network": {
+                "type": "string",
+                "enum": [
+                  "MTN",
+                  "AIRTEL",
+                  "GLO",
+                  "9MOBILE"
+                ]
+              },
+              "reference": {
+                "type": "string",
+                "description": "Transfer reference"
+              },
+              "account_number": {
+                "type": "string",
+                "description": "Destination account number"
+              },
+              "description": {
+                "type": "string",
+                "description": "Issue description"
+              }
+            }
+          }
+        },
+        "server": {
+          "url": "undefined/api/vapi/webhook"
+        }
+      },
+      {
+        "type": "function",
+        "function": {
+          "name": "generateStatement",
+          "description": "Generate an account statement.",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "amount_minor": {
+                "type": "number",
+                "description": "Amount in kobo (₦1 = 100 kobo)"
+              },
+              "network": {
+                "type": "string",
+                "enum": [
+                  "MTN",
+                  "AIRTEL",
+                  "GLO",
+                  "9MOBILE"
+                ]
+              },
+              "reference": {
+                "type": "string",
+                "description": "Transfer reference"
+              },
+              "account_number": {
+                "type": "string",
+                "description": "Destination account number"
+              },
+              "description": {
+                "type": "string",
+                "description": "Issue description"
+              }
+            }
+          }
+        },
+        "server": {
+          "url": "undefined/api/vapi/webhook"
+        }
+      },
+      {
+        "type": "function",
+        "function": {
+          "name": "sendStatementEmail",
+          "description": "Email an account statement to the registered address.",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "amount_minor": {
+                "type": "number",
+                "description": "Amount in kobo (₦1 = 100 kobo)"
+              },
+              "network": {
+                "type": "string",
+                "enum": [
+                  "MTN",
+                  "AIRTEL",
+                  "GLO",
+                  "9MOBILE"
+                ]
+              },
+              "reference": {
+                "type": "string",
+                "description": "Transfer reference"
+              },
+              "account_number": {
+                "type": "string",
+                "description": "Destination account number"
+              },
+              "description": {
+                "type": "string",
+                "description": "Issue description"
+              }
+            }
+          }
+        },
+        "server": {
+          "url": "undefined/api/vapi/webhook"
+        }
+      },
+      {
+        "type": "function",
+        "function": {
+          "name": "createSupportCase",
+          "description": "Open a support case.",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "amount_minor": {
+                "type": "number",
+                "description": "Amount in kobo (₦1 = 100 kobo)"
+              },
+              "network": {
+                "type": "string",
+                "enum": [
+                  "MTN",
+                  "AIRTEL",
+                  "GLO",
+                  "9MOBILE"
+                ]
+              },
+              "reference": {
+                "type": "string",
+                "description": "Transfer reference"
+              },
+              "account_number": {
+                "type": "string",
+                "description": "Destination account number"
+              },
+              "description": {
+                "type": "string",
+                "description": "Issue description"
+              }
+            }
+          }
+        },
+        "server": {
+          "url": "undefined/api/vapi/webhook"
+        }
+      },
+      {
+        "type": "function",
+        "function": {
+          "name": "escalateToHuman",
+          "description": "Escalate to a human support case.",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "amount_minor": {
+                "type": "number",
+                "description": "Amount in kobo (₦1 = 100 kobo)"
+              },
+              "network": {
+                "type": "string",
+                "enum": [
+                  "MTN",
+                  "AIRTEL",
+                  "GLO",
+                  "9MOBILE"
+                ]
+              },
+              "reference": {
+                "type": "string",
+                "description": "Transfer reference"
+              },
+              "account_number": {
+                "type": "string",
+                "description": "Destination account number"
+              },
+              "description": {
+                "type": "string",
+                "description": "Issue description"
+              }
+            }
+          }
+        },
+        "server": {
+          "url": "undefined/api/vapi/webhook"
+        }
+      }
+    ]
+  },
+  "voice": {
+    "provider": "vapi",
+    "voiceId": "Elliot"
+  },
+  "transcriber": {
+    "provider": "deepgram",
+    "model": "nova-3",
+    "language": "en"
+  }
+}
