@@ -50,7 +50,7 @@
           }
         },
         "server": {
-          "url": "https://rind-upwind-esquire.ngrok-free.dev/api/vapi/webhook"
+          "url": "https://soro-api.onrender.com/api/vapi/webhook"
         }
       },
       {
@@ -90,7 +90,7 @@
           }
         },
         "server": {
-          "url": "https://rind-upwind-esquire.ngrok-free.dev/api/vapi/webhook"
+          "url": "https://soro-api.onrender.com/api/vapi/webhook"
         }
       },
       {
@@ -130,7 +130,7 @@
           }
         },
         "server": {
-          "url": "https://rind-upwind-esquire.ngrok-free.dev/api/vapi/webhook"
+          "url": "https://soro-api.onrender.com/api/vapi/webhook"
         }
       },
       {
@@ -170,7 +170,7 @@
           }
         },
         "server": {
-          "url": "https://rind-upwind-esquire.ngrok-free.dev/api/vapi/webhook"
+          "url": "https://soro-api.onrender.com/api/vapi/webhook"
         }
       },
       {
@@ -210,7 +210,7 @@
           }
         },
         "server": {
-          "url": "https://rind-upwind-esquire.ngrok-free.dev/api/vapi/webhook"
+          "url": "https://soro-api.onrender.com/api/vapi/webhook"
         }
       },
       {
@@ -250,7 +250,7 @@
           }
         },
         "server": {
-          "url": "https://rind-upwind-esquire.ngrok-free.dev/api/vapi/webhook"
+          "url": "https://soro-api.onrender.com/api/vapi/webhook"
         }
       },
       {
@@ -290,7 +290,7 @@
           }
         },
         "server": {
-          "url": "https://rind-upwind-esquire.ngrok-free.dev/api/vapi/webhook"
+          "url": "https://soro-api.onrender.com/api/vapi/webhook"
         }
       },
       {
@@ -330,7 +330,7 @@
           }
         },
         "server": {
-          "url": "https://rind-upwind-esquire.ngrok-free.dev/api/vapi/webhook"
+          "url": "https://soro-api.onrender.com/api/vapi/webhook"
         }
       },
       {
@@ -370,7 +370,7 @@
           }
         },
         "server": {
-          "url": "https://rind-upwind-esquire.ngrok-free.dev/api/vapi/webhook"
+          "url": "https://soro-api.onrender.com/api/vapi/webhook"
         }
       },
       {
@@ -410,7 +410,7 @@
           }
         },
         "server": {
-          "url": "https://rind-upwind-esquire.ngrok-free.dev/api/vapi/webhook"
+          "url": "https://soro-api.onrender.com/api/vapi/webhook"
         }
       },
       {
@@ -450,7 +450,7 @@
           }
         },
         "server": {
-          "url": "https://rind-upwind-esquire.ngrok-free.dev/api/vapi/webhook"
+          "url": "https://soro-api.onrender.com/api/vapi/webhook"
         }
       },
       {
@@ -490,7 +490,7 @@
           }
         },
         "server": {
-          "url": "https://rind-upwind-esquire.ngrok-free.dev/api/vapi/webhook"
+          "url": "https://soro-api.onrender.com/api/vapi/webhook"
         }
       },
       {
@@ -530,7 +530,7 @@
           }
         },
         "server": {
-          "url": "https://rind-upwind-esquire.ngrok-free.dev/api/vapi/webhook"
+          "url": "https://soro-api.onrender.com/api/vapi/webhook"
         }
       },
       {
@@ -570,7 +570,7 @@
           }
         },
         "server": {
-          "url": "https://rind-upwind-esquire.ngrok-free.dev/api/vapi/webhook"
+          "url": "https://soro-api.onrender.com/api/vapi/webhook"
         }
       },
       {
@@ -610,7 +610,7 @@
           }
         },
         "server": {
-          "url": "https://rind-upwind-esquire.ngrok-free.dev/api/vapi/webhook"
+          "url": "https://soro-api.onrender.com/api/vapi/webhook"
         }
       },
       {
@@ -650,7 +650,7 @@
           }
         },
         "server": {
-          "url": "https://rind-upwind-esquire.ngrok-free.dev/api/vapi/webhook"
+          "url": "https://soro-api.onrender.com/api/vapi/webhook"
         }
       }
     ]

@@ -26,7 +26,7 @@ export function demoRoutes(app: FastifyInstance, db: Database, core: MockBanking
       return reply.status(401).send({ success: false, error: { code: 'UNAUTHORIZED', message: 'Admin token required.' } });
     }
 
-    const body = (req.body ?? {}) as { phone?: string; customer?: string; turns?: string[]; demoPin?: string };
+    const body = (req.body ?? {}) as { phone?: string; customer?: string; turns?: string[]; demoPin?: string; scenario?: string; paceMs?: number };
     const phone = body.phone ?? '08030000001';
     const customer = getCustomerByPhone(db, phone);
     if (!customer) return reply.status(404).send({ success: false, error: { code: 'CUSTOMER_NOT_FOUND', message: 'Demo customer not found.' } });
@@ -39,7 +39,7 @@ export function demoRoutes(app: FastifyInstance, db: Database, core: MockBanking
       startedAt: new Date().toISOString(),
     });
 
-    const ctx: AgentContext = { db, core, callSessionId: callId, customerId: customer.id, accountId: account?.id, authenticated: true };
+    const ctx: AgentContext = { db, core, callSessionId: callId, customerId: customer.id, accountId: account?.id, authenticated: true, scenario: body.scenario as never };
     const transcript: { sender: string; text: string }[] = [];
     const turns = body.turns ?? ['How much dey my account?'];
 
@@ -64,6 +64,8 @@ export function demoRoutes(app: FastifyInstance, db: Database, core: MockBanking
       addMessage(db, { id: randomUUID(), callSessionId: callId, sender: 'AYO', content: replyText, createdAt: new Date().toISOString() });
       transcript.push({ sender: 'CUSTOMER', text: turn }, { sender: 'AYO', text: replyText });
       publishSessionEvents(db, callId);
+      const pace = typeof body.paceMs === 'number' && body.paceMs > 0 ? Math.min(body.paceMs, 15000) : 0;
+      if (pace > 0) await new Promise((r) => setTimeout(r, pace));
 
       // Follow-up balance question answers the REAL state
       if (/balance|how much/i.test(turn)) {
