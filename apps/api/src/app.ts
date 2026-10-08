@@ -2,6 +2,7 @@ import Fastify from 'fastify';
 import { randomUUID } from 'node:crypto';
 import { dirname, join } from 'node:path';
 import { mkdirSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { openDatabase, migrate } from '@soro/db';
 import { MockBankingCore } from '@soro/banking';
@@ -25,8 +26,16 @@ export interface AppContext {
 
 export function buildApp(): ReturnType<typeof Fastify> {
   const dbPath = process.env.SORO_DATABASE_PATH ?? join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..', 'data', 'soro.db');
-  mkdirSync(dirname(dbPath), { recursive: true });
-  const database = openDatabase(dbPath);
+  let databasePath = dbPath;
+  try {
+    mkdirSync(dirname(databasePath), { recursive: true });
+  } catch {
+    // No writable disk mounted (e.g. Render without a disk): fall back to
+    // ephemeral storage so the service still starts. Attach a disk at the
+    // configured path for persistence (see render.yaml / docs/DEPLOYMENT.md).
+    databasePath = join(tmpdir(), 'soro.db');
+  }
+  const database = openDatabase(databasePath);
   migrate(database);
   const core = new MockBankingCore(database);
   const app = Fastify({ logger: { level: 'info' } });
