@@ -14,6 +14,7 @@
     "start": "tsx src/server.ts"
   },
   "dependencies": {
+    "@fastify/cors": "^11.3.0",
     "@soro/banking": "workspace:*",
     "@soro/config": "workspace:*",
     "@soro/db": "workspace:*",

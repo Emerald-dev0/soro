@@ -1,4 +1,5 @@
 import Fastify from 'fastify';
+import cors from '@fastify/cors';
 import { randomUUID } from 'node:crypto';
 import { dirname, join } from 'node:path';
 import { mkdirSync } from 'node:fs';
@@ -25,7 +26,7 @@ export interface AppContext {
   dbPath: string;
 }
 
-export function buildApp(): ReturnType<typeof Fastify> {
+export async function buildApp(): Promise<ReturnType<typeof Fastify>> {
   const dbPath = process.env.SORO_DATABASE_PATH ?? join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..', 'data', 'soro.db');
   let databasePath = dbPath;
   try {
@@ -43,6 +44,7 @@ export function buildApp(): ReturnType<typeof Fastify> {
   }
   const core = new MockBankingCore(database);
   const app = Fastify({ logger: { level: 'info' } });
+  await app.register(cors, { origin: true });
 
   app.addHook('onRequest', async (req) => {
     (req as unknown as { id_: string }).id_ = randomUUID();
