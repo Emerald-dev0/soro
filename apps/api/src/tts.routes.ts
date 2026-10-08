@@ -15,8 +15,8 @@ export function ttsRoutes(app: FastifyInstance): void {
     if (!text) return reply.status(400).send({ success: false, error: { code: 'INVALID_INPUT', message: 'text required.' } });
     const voiceId =
       body.speaker === 'customer'
-        ? (process.env.CUSTOMER_VOICE_ID ?? 'TyAD2ntJFdDReoa55SLn')
-        : (process.env.AYO_VOICE_ID ?? 'qRRCpZ9846Z3NiCRzdQ5');
+        ? (process.env.CUSTOMER_VOICE_ID ?? 'iP95p4xoKVk53GoZ742B')
+        : (process.env.AYO_VOICE_ID ?? 'JBFqnCBsd6RMkjVDRZzb');
 
     let upstream: Response;
     try {
