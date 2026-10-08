@@ -66,8 +66,21 @@ export const api = {
     if (text.includes('Too many attempts')) return { success: true, data: { outcome: 'LOCKED' } };
     return { success: true, data: { outcome: 'FAILED' } };
   },
-  runScenario: (body: { phone?: string; turns?: string[]; demoPin?: string; scenario?: string }) =>
+  runScenario: (body: { phone?: string; turns?: string[]; demoPin?: string; scenario?: string; paceMs?: number }) =>
     request<{ callId: string; transcript: { sender: string; text: string }[] }>(`/api/demo/run-scenario`, { method: 'POST', body: JSON.stringify(body) }),
+  speak: async (text: string, speaker: 'ayo' | 'customer'): Promise<string | null> => {
+    try {
+      const res = await fetch(`${baseUrl()}/api/tts/speak`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ text, speaker }),
+      });
+      if (!res.ok) return null;
+      return URL.createObjectURL(await res.blob());
+    } catch {
+      return null;
+    }
+  },
 };
 
 export interface TransactionRow {

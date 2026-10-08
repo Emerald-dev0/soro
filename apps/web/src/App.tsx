@@ -2,6 +2,7 @@ import { Link, NavLink, Route, Routes } from 'react-router-dom';
 import { Landing } from './pages/Landing.js';
 import { Call } from './pages/Call.js';
 import { Authorize } from './pages/Authorize.js';
+import { Demo } from './pages/Demo.js';
 import { COMMAND_CENTER_URL } from './config.js';
 
 export function App() {
@@ -18,6 +19,7 @@ export function App() {
         <Route path="/" element={<Landing />} />
         <Route path="/call" element={<Call />} />
         <Route path="/authorize/:callId" element={<Authorize />} />
+        <Route path="/demo" element={<Demo />} />
         <Route path="*" element={<Landing />} />
       </Routes>
     </>
