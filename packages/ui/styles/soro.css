@@ -150,3 +150,53 @@ table.soro-table tr:hover td { background: #fbfaf7; }
 .soro-dialpad { display: grid; grid-template-columns: repeat(3, 64px); gap: 10px; justify-content: center; padding: 10px 0 4px; }
 .soro-dialpad button { height: 52px; border-radius: 50%; border: 1px solid #3a403a; background: #1b201b; color: #f2f3f0; font-size: 19px; font-weight: 650; cursor: pointer; }
 .soro-dialpad button:hover { background: #262c26; }
+
+/* Landing */
+.soro-lp-nav { position: sticky; top: 0; z-index: 20; background: rgba(250, 250, 248, 0.88); backdrop-filter: blur(10px); border-bottom: 1px solid var(--soro-border); }
+.soro-lp-nav-inner { max-width: 1180px; margin: 0 auto; padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.soro-lp-links { display: flex; gap: 4px; }
+.soro-lp-links a { padding: 7px 12px; border-radius: 8px; color: var(--soro-muted); font-size: 13.5px; font-weight: 500; }
+.soro-lp-links a:hover { color: var(--soro-ink); background: var(--soro-neutral-wash); text-decoration: none; }
+@media (max-width: 760px) { .soro-lp-links { display: none; } }
+.soro-section { padding: 72px 0; }
+.soro-section.alt { background: var(--soro-surface); border-top: 1px solid var(--soro-border); border-bottom: 1px solid var(--soro-border); }
+.soro-kicker { font-size: 12.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--soro-accent-ink); margin-bottom: 10px; }
+.soro-h2 { font-size: clamp(24px, 3.2vw, 34px); letter-spacing: -0.025em; line-height: 1.15; margin: 0 0 12px; max-width: 22ch; }
+.soro-lead { font-size: 16px; color: var(--soro-muted); line-height: 1.65; max-width: 62ch; margin: 0 0 8px; }
+.soro-split { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+@media (max-width: 900px) { .soro-split { grid-template-columns: 1fr; gap: 28px; } .soro-section { padding: 52px 0; } }
+.soro-ayo-frame { border: 1px solid var(--soro-border); border-radius: 18px; overflow: hidden; background: #ececea; }
+.soro-ayo-frame img { display: block; width: 100%; height: auto; }
+.soro-ayo-frame figcaption { font-size: 12px; color: var(--soro-muted); padding: 10px 14px; background: var(--soro-surface); border-top: 1px solid var(--soro-border); }
+.soro-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-top: 1px solid var(--soro-border); border-bottom: 1px solid var(--soro-border); background: var(--soro-surface); }
+.soro-strip > div { padding: 18px 24px; font-size: 13.5px; }
+.soro-strip > div + div { border-left: 1px solid var(--soro-border); }
+.soro-strip strong { display: block; font-size: 13px; margin-bottom: 3px; }
+.soro-strip span { color: var(--soro-muted); }
+@media (max-width: 760px) { .soro-strip { grid-template-columns: 1fr; } .soro-strip > div + div { border-left: 0; border-top: 1px solid var(--soro-border); } }
+.soro-vs { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 28px; }
+@media (max-width: 760px) { .soro-vs { grid-template-columns: 1fr; } }
+.soro-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 28px; counter-reset: step; }
+.soro-steps > div { border-top: 2px solid var(--soro-ink); padding-top: 14px; }
+.soro-steps .n { font-family: var(--soro-mono); font-size: 12px; color: var(--soro-faint); }
+.soro-steps strong { display: block; margin: 4px 0; font-size: 15px; }
+.soro-steps p { margin: 0; font-size: 13.5px; color: var(--soro-muted); line-height: 1.55; }
+@media (max-width: 900px) { .soro-steps { grid-template-columns: 1fr 1fr; } }
+.soro-flow { display: flex; flex-direction: column; gap: 0; margin-top: 24px; font-size: 14px; }
+.soro-flow .node { background: var(--soro-surface); border: 1px solid var(--soro-border); border-radius: 10px; padding: 10px 16px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.soro-flow .arrow { text-align: center; color: var(--soro-faint); line-height: 1; padding: 2px 0; }
+.soro-demo-chat .soro-msg { opacity: 0; transform: translateY(8px); transition: opacity 0.5s ease, transform 0.5s ease; }
+.soro-demo-chat .soro-msg.shown { opacity: 1; transform: none; }
+.soro-event-pipe { display: flex; flex-direction: column; gap: 0; }
+.soro-event-pipe .soro-tl-item { opacity: 0; transform: translateX(-6px); transition: opacity 0.45s ease, transform 0.45s ease; }
+.soro-event-pipe .soro-tl-item.shown { opacity: 1; transform: none; }
+.soro-reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.soro-reveal.shown { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .soro-reveal, .soro-demo-chat .soro-msg, .soro-event-pipe .soro-tl-item { opacity: 1 !important; transform: none !important; transition: none !important; }
+  .soro-orb.listening::after { animation: none; }
+}
+.soro-footer { border-top: 1px solid var(--soro-border); padding: 32px 0 48px; margin-top: 24px; }
+.soro-footer nav { display: flex; gap: 20px; flex-wrap: wrap; font-size: 13.5px; margin: 12px 0; }
+.soro-fine { font-size: 12.5px; color: var(--soro-faint); }
+.soro-lang-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
