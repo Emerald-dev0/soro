@@ -4,7 +4,7 @@ import { dirname, join } from 'node:path';
 import { mkdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
-import { openDatabase, migrate } from '@soro/db';
+import { listCustomers, openDatabase, migrate, seedDemoData } from '@soro/db';
 import { MockBankingCore } from '@soro/banking';
 
 import { twilioVoiceRoute, twilioGatherRoute, twilioDtmfRoute, twilioStatusRoute } from './twilio.routes.js';
@@ -37,6 +37,9 @@ export function buildApp(): ReturnType<typeof Fastify> {
   }
   const database = openDatabase(databasePath);
   migrate(database);
+  if (process.env.DEMO_MODE !== 'false' && listCustomers(database).length === 0) {
+    seedDemoData(database);
+  }
   const core = new MockBankingCore(database);
   const app = Fastify({ logger: { level: 'info' } });
 
