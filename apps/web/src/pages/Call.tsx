@@ -1,16 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import VapiClient from '@vapi-ai/web';
 
 interface VapiLike {
   start(assistantId: string): Promise<unknown>;
   stop(): void;
+  setMuted(m: boolean): void;
+  isMuted(): boolean;
   on(event: string, cb: (msg: { type?: string; role?: string; transcript?: string; transcriptType?: string }) => void): void;
   on(event: 'error', cb: (e: unknown) => void): void;
   on(event: 'call-start' | 'call-end' | 'speech-start' | 'speech-end', cb: () => void): void;
 }
 const Vapi = VapiClient as unknown as new (publicKey: string) => VapiLike;
 
-type Phase = 'idle' | 'connecting' | 'connected' | 'listening' | 'thinking' | 'speaking' | 'ended' | 'error';
+type Phase = 'idle' | 'connecting' | 'active' | 'ended' | 'error';
 
 interface ChatLine { who: 'ayo' | 'you'; text: string }
 
@@ -20,23 +23,15 @@ const ASSISTANT_ID =
 const PUBLIC_KEY =
   (import.meta as unknown as { env: Record<string, string | undefined> }).env['VITE_VAPI_PUBLIC_KEY'] ?? '';
 
-function phaseLabel(p: Phase): string {
-  switch (p) {
-    case 'idle': return 'Ready';
-    case 'connecting': return 'Ayo is joining…';
-    case 'connected': return 'Connected';
-    case 'listening': return 'Listening…';
-    case 'thinking': return 'Understanding your request…';
-    case 'speaking': return 'Ayo is speaking…';
-    case 'ended': return 'Call ended';
-    case 'error': return 'Connection failed';
-  }
-}
+const DIAL = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', '#'];
 
 export function Call() {
   const [phase, setPhase] = useState<Phase>('idle');
-  const [lines, setLines] = useState<ChatLine[]>([]);
+  const [speaking, setSpeaking] = useState(false);
+  const [lines, setLines] = useState<ChatLine[]>([{ who: 'ayo', text: 'Hello, this is Ayo from Soro. How can I help you today?' }]);
   const [seconds, setSeconds] = useState(0);
+  const [muted, setMuted] = useState(false);
+  const [padOpen, setPadOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const vapiRef = useRef<VapiLike | null>(null);
   const timer = useRef<number | null>(null);
@@ -49,7 +44,7 @@ export function Call() {
   const start = async () => {
     setError(null);
     if (!PUBLIC_KEY) {
-      setError('Voice is not configured in this build (missing VITE_VAPI_PUBLIC_KEY). The backend demo still works via /api/demo/run-scenario.');
+      setError('Voice is not configured in this build (missing VITE_VAPI_PUBLIC_KEY).');
       setPhase('error');
       return;
     }
@@ -58,21 +53,21 @@ export function Call() {
       const vapi = new Vapi(PUBLIC_KEY);
       vapiRef.current = vapi;
       vapi.on('call-start', () => {
-        setPhase('connected');
+        setPhase('active');
         setSeconds(0);
+        setLines([]);
         timer.current = window.setInterval(() => setSeconds((s) => s + 1), 1000);
       });
       vapi.on('call-end', () => {
         setPhase('ended');
         if (timer.current) window.clearInterval(timer.current);
       });
-      vapi.on('speech-start', () => setPhase((p) => (p === 'connected' || p === 'listening' ? 'speaking' : p)));
-      vapi.on('speech-end', () => setPhase('listening'));
+      vapi.on('speech-start', () => setSpeaking(true));
+      vapi.on('speech-end', () => setSpeaking(false));
       vapi.on('message', (msg) => {
         if (msg.type === 'transcript' && msg.transcriptType === 'final' && msg.transcript) {
           const who: ChatLine['who'] = msg.role === 'user' ? 'you' : 'ayo';
           setLines((prev) => [...prev, { who, text: msg.transcript as string }].slice(-30));
-          setPhase(msg.role === 'user' ? 'thinking' : 'listening');
         }
       });
       vapi.on('error', (e: unknown) => {
@@ -92,39 +87,70 @@ export function Call() {
     setPhase('ended');
   };
 
+  const toggleMute = () => {
+    const next = !muted;
+    setMuted(next);
+    try { vapiRef.current?.setMuted(next); } catch { /* ignore */ }
+  };
+
   const mm = String(Math.floor(seconds / 60)).padStart(2, '0');
   const ss = String(seconds % 60).padStart(2, '0');
+  const now = new Date();
+  const clock = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
 
   return (
-    <main className="soro-page-narrow">
-      <div className="soro-call-ui" style={{ textAlign: 'center' }}>
-        <div className={`soro-orb ${phase === 'listening' ? 'listening' : ''}`} aria-hidden />
-        <div style={{ fontWeight: 700, fontSize: 18 }}>Ayo</div>
-        <div style={{ color: 'var(--soro-muted)', fontSize: 13.5, margin: '4px 0 8px' }} role="status">
-          {phaseLabel(phase)}{phase === 'connected' || phase === 'listening' || phase === 'speaking' || phase === 'thinking' ? ` · ${mm}:${ss}` : ''}
-        </div>
-        {phase === 'idle' || phase === 'ended' || phase === 'error' ? (
-          <button className="soro-btn soro-btn-primary" onClick={start}>Talk to Ayo</button>
-        ) : (
-          <button className="soro-btn soro-btn-danger" onClick={stop}>End call</button>
-        )}
-        {error ? <p style={{ color: 'var(--soro-red)', fontSize: 13.5 }}>{error}</p> : null}
-        <p style={{ fontSize: 12.5, color: 'var(--soro-faint)', marginTop: 12 }}>
-          Voice channel · Browser / Vapi · PIN authorization happens on the secure page, never in chat
-        </p>
-      </div>
-      {lines.length > 0 && (
-        <div className="soro-card" style={{ marginTop: 16 }}>
-          <h3>Live transcript</h3>
-          <div className="soro-chat">
+    <main className="soro-phone-wrap">
+      <div className="soro-phone" role="region" aria-label="Ayo phone call">
+        <div className="soro-phone-screen">
+          <div className="soro-statusbar"><span>{clock}</span><span>Soro · 5G ▮▮▮▯ 🔋</span></div>
+          <div className="soro-notch" aria-hidden />
+          <div className="soro-call-head">
+            <div className={`soro-orb ${speaking ? 'listening' : ''}`} aria-hidden />
+            <div className="name">Ayo</div>
+            <div className="sub" role="status">
+              {phase === 'idle' && 'Ready to talk'}
+              {phase === 'connecting' && 'Calling…'}
+              {phase === 'active' && `${mm}:${ss} · ${speaking ? 'Ayo speaking' : 'Listening'}`}
+              {phase === 'ended' && 'Call ended'}
+              {phase === 'error' && 'Call failed'}
+            </div>
+          </div>
+
+          <div className="soro-phone-transcript" aria-live="polite">
             {lines.map((l, i) => (
-              <div key={i} className={`soro-msg ${l.who === 'you' ? 'customer' : 'ayo'}`}>
-                <span className="who">{l.who === 'you' ? 'You' : 'Ayo'}</span>{l.text}
-              </div>
+              <div key={i} className={`soro-msg ${l.who === 'you' ? 'customer' : 'ayo'}`}>{l.text}</div>
             ))}
+            {phase === 'idle' && <div style={{ textAlign: 'center', color: '#8a918a', fontSize: 12.5 }}>Tap the green button to start talking to Ayo.</div>}
+          </div>
+
+          {padOpen && phase === 'active' && (
+            <div className="soro-dialpad" aria-label="Dial pad">
+              {DIAL.map((d) => <button key={d} onClick={() => undefined} aria-label={`Key ${d}`}>{d}</button>)}
+            </div>
+          )}
+
+          <div style={{ paddingBottom: 8 }}>
+            {phase === 'active' ? (
+              <div className="soro-call-controls">
+                <div><button className={`soro-call-btn ${muted ? 'on' : ''}`} onClick={toggleMute} aria-label={muted ? 'Unmute' : 'Mute'} aria-pressed={muted}>🎙</button><div className="soro-call-btn-label">{muted ? 'unmute' : 'mute'}</div></div>
+                <div><button className={`soro-call-btn ${padOpen ? 'on' : ''}`} onClick={() => setPadOpen((v) => !v)} aria-label="Keypad" aria-pressed={padOpen}>▦</button><div className="soro-call-btn-label">keypad</div></div>
+                <div><button className="soro-call-btn end" onClick={stop} aria-label="End call">✆</button><div className="soro-call-btn-label">end</div></div>
+              </div>
+            ) : (
+              <div style={{ display: 'flex', justifyContent: 'center', padding: '12px 0' }}>
+                <button className="soro-call-btn" style={{ background: '#1d7a38', borderColor: '#1d7a38', width: 72, height: 72, fontSize: 26 }} onClick={start} aria-label="Call Ayo">✆</button>
+              </div>
+            )}
+            {phase === 'ended' && <div style={{ textAlign: 'center' }}><Link to="/call" onClick={(e) => { e.preventDefault(); start(); }} style={{ color: '#cfd3ce', fontSize: 13 }}>Call again</Link></div>}
           </div>
         </div>
-      )}
+      </div>
+      <div style={{ maxWidth: 375, margin: '0 auto', padding: '0 4px' }}>
+        {error ? <p style={{ color: 'var(--soro-red)', fontSize: 13.5 }}>{error}</p> : null}
+        <p style={{ fontSize: 12.5, color: 'var(--soro-muted)' }}>
+          Browser calls have no keypad path to the AI — when Ayo asks for authorization, open the secure page on this same phone. PIN entry never reaches the conversation.
+        </p>
+      </div>
     </main>
   );
 }

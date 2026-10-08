@@ -127,3 +127,26 @@ table.soro-table tr:hover td { background: #fbfaf7; }
 .soro-pin-dots { display: flex; gap: 10px; justify-content: center; margin: 14px 0; }
 .soro-pin-dots span { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid var(--soro-border-strong); }
 .soro-pin-dots span.filled { background: var(--soro-ink); border-color: var(--soro-ink); }
+
+/* Phone-frame call experience */
+.soro-phone-wrap { display: flex; justify-content: center; padding: 28px 0 48px; }
+.soro-phone { width: 375px; max-width: 100%; background: #101312; color: #f2f3f0; border-radius: 44px; padding: 14px 14px 22px; box-shadow: 0 24px 70px rgba(10, 14, 10, 0.35); border: 1px solid #2a2e2a; }
+.soro-phone-screen { background: linear-gradient(180deg, #18201c 0%, #101312 60%); border-radius: 32px; overflow: hidden; min-height: 560px; display: flex; flex-direction: column; }
+.soro-statusbar { display: flex; justify-content: space-between; align-items: center; padding: 12px 22px 4px; font-size: 12px; font-weight: 600; }
+.soro-notch { width: 110px; height: 24px; background: #000; border-radius: 999px; margin: 0 auto; }
+.soro-call-head { text-align: center; padding: 14px 0 6px; }
+.soro-call-head .name { font-size: 21px; font-weight: 700; }
+.soro-call-head .sub { font-size: 13px; color: #a7aca7; margin-top: 3px; }
+.soro-phone .soro-orb { width: 96px; height: 96px; margin: 16px auto 10px; }
+.soro-phone-transcript { flex: 1; overflow-y: auto; padding: 10px 16px; display: flex; flex-direction: column; gap: 8px; min-height: 120px; max-height: 260px; }
+.soro-phone-transcript .soro-msg { font-size: 13px; }
+.soro-phone-transcript .soro-msg.ayo { background: #222825; border-color: #333936; color: #f2f3f0; }
+.soro-call-controls { display: grid; grid-template-columns: repeat(3, 64px); gap: 14px; justify-content: center; padding: 14px 0 6px; }
+.soro-call-btn { width: 64px; height: 64px; border-radius: 50%; border: 1px solid #3a403a; background: #222825; color: #f2f3f0; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.soro-call-btn:hover { background: #2c332c; }
+.soro-call-btn.on { background: #e8eae6; color: #101312; border-color: #e8eae6; }
+.soro-call-btn.end { background: var(--soro-red); border-color: var(--soro-red); }
+.soro-call-btn-label { font-size: 10.5px; color: #a7aca7; text-align: center; margin-top: 5px; }
+.soro-dialpad { display: grid; grid-template-columns: repeat(3, 64px); gap: 10px; justify-content: center; padding: 10px 0 4px; }
+.soro-dialpad button { height: 52px; border-radius: 50%; border: 1px solid #3a403a; background: #1b201b; color: #f2f3f0; font-size: 19px; font-weight: 650; cursor: pointer; }
+.soro-dialpad button:hover { background: #262c26; }
