@@ -93,7 +93,7 @@ export function buildAssistant(): Record<string, unknown> {
       }],
       tools,
     },
-    voice: { provider: '11labs', voiceId: 'TyAD2ntJFdDReoa55SLn', model: 'eleven_multilingual_v2' },
+    voice: { provider: '11labs', voiceId: 'qRRCpZ9846Z3NiCRzdQ5', model: 'eleven_multilingual_v2' },
     transcriber: { provider: 'deepgram', model: 'nova-3', language: 'en' },
   };
 }

@@ -17,6 +17,16 @@ Phone → Twilio (live) / scenario engine (demo) → voice layer → Ayo
 → Wema adapter / Demo adapter → event stream → Command Center
 ```
 
+## Live deployments
+
+| Surface | URL |
+|---|---|
+| Customer app (SoroAI landing + Talk to Ayo + authorize) | https://web-ee10k7mq1-oluwadareanuoluwapo458-7684.vercel.app |
+| Command Center | https://command-center-89ltykpmr-oluwadareanuoluwapo458-7684.vercel.app |
+| Backend API (Render) | https://soro-api.onrender.com |
+
+Health: `GET https://soro-api.onrender.com/health`
+
 ## Quick start (local only — no remote, no deploy)
 
 ```bash

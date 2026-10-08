@@ -657,7 +657,7 @@
   },
   "voice": {
     "provider": "11labs",
-    "voiceId": "TyAD2ntJFdDReoa55SLn",
+    "voiceId": "qRRCpZ9846Z3NiCRzdQ5",
     "model": "eleven_multilingual_v2"
   },
   "transcriber": {
