@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Ayo, Reveal } from '../components/Ayo.js';
 import { LiveDemo } from '../components/LiveDemo.js';
+import { COMMAND_CENTER_URL } from '../config.js';
 import { ArrowIcon, BoltIcon, ChatIcon, DocIcon, GlobeIcon, LockIcon, MicIcon, ShieldIcon, SwapIcon } from '../components/icons.js';
 
 const PHRASES = [
@@ -193,7 +194,7 @@ export function Landing() {
                 <div><div className="soro-stat" style={{ color: '#fff' }}>₦500.00</div><p style={{ color: '#b9beb8', fontSize: 13 }}>MTN · 1.5GB · 7 days — authorized, executed</p></div>
                 <div><div className="soro-stat" style={{ color: '#fff' }}>₦83,750.00</div><p style={{ color: '#b9beb8', fontSize: 13 }}>Balance after purchase, confirmed by provider</p></div>
               </div>
-              <p style={{ marginTop: 24 }}><a className="soro-btn soro-btn-primary" href="/command" target="_blank" rel="noreferrer">Explore the Command Center</a></p>
+              <p style={{ marginTop: 24 }}><a className="soro-btn soro-btn-primary" href={COMMAND_CENTER_URL} target="_blank" rel="noreferrer">Explore the Command Center</a></p>
             </div>
           </Reveal>
         </section></div>
@@ -246,7 +247,7 @@ export function Landing() {
               <p className="soro-lead">No menus. No hunting through screens. Just tell Ayo what you need.</p>
               <div className="soro-row">
                 <Link className="soro-btn soro-btn-primary" to="/call">Talk to Ayo</Link>
-                <a className="soro-btn" href="/command" target="_blank" rel="noreferrer">See the Command Center</a>
+                <a className="soro-btn" href={COMMAND_CENTER_URL} target="_blank" rel="noreferrer">See the Command Center</a>
               </div>
             </Reveal>
           </div>
@@ -263,7 +264,7 @@ export function Landing() {
             <a href="#product">Product</a>
             <a href="#how">How it works</a>
             <a href="#security">Security</a>
-            <a href="/command" target="_blank" rel="noreferrer">Command Center</a>
+            <a href={COMMAND_CENTER_URL} target="_blank" rel="noreferrer">Command Center</a>
             <Link to="/call">Talk to Ayo</Link>
           </nav>
           <p className="soro-fine">SoroAI is a conversational interface, not a bank. Demo data is simulated and clearly labelled. Photography: Shedrack Salami, Mary via Unsplash.</p>

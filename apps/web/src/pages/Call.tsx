@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import VapiClient from '@vapi-ai/web';
+import * as VapiModule from '@vapi-ai/web';
 
 interface VapiLike {
   start(assistantId: string): Promise<unknown>;
@@ -11,7 +11,7 @@ interface VapiLike {
   on(event: 'error', cb: (e: unknown) => void): void;
   on(event: 'call-start' | 'call-end' | 'speech-start' | 'speech-end', cb: () => void): void;
 }
-const Vapi = VapiClient as unknown as new (publicKey: string) => VapiLike;
+const Vapi = ((VapiModule as unknown as { default?: unknown }).default ?? VapiModule) as unknown as new (publicKey: string) => VapiLike;
 
 type Phase = 'idle' | 'connecting' | 'active' | 'ended' | 'error';
 
@@ -49,6 +49,11 @@ export function Call() {
       return;
     }
     try {
+      if (typeof Vapi !== 'function') {
+        setError('Voice library failed to load. Please refresh and try again.');
+        setPhase('error');
+        return;
+      }
       setPhase('connecting');
       const vapi = new Vapi(PUBLIC_KEY);
       vapiRef.current = vapi;

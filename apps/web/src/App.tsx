@@ -2,6 +2,7 @@ import { Link, NavLink, Route, Routes } from 'react-router-dom';
 import { Landing } from './pages/Landing.js';
 import { Call } from './pages/Call.js';
 import { Authorize } from './pages/Authorize.js';
+import { COMMAND_CENTER_URL } from './config.js';
 
 export function App() {
   return (
@@ -10,7 +11,7 @@ export function App() {
         <Link to="/" className="soro-brand" style={{ textDecoration: 'none' }}>Soro <small>conversational banking</small></Link>
         <nav className="soro-nav" aria-label="Primary">
           <NavLink to="/call" className={({ isActive }) => (isActive ? 'active' : '')}>Talk to Ayo</NavLink>
-          <a href="/command" target="_blank" rel="noreferrer">Command Center</a>
+          <a href={COMMAND_CENTER_URL} target="_blank" rel="noreferrer">Command Center</a>
         </nav>
       </header>
       <Routes>
