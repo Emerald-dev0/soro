@@ -656,8 +656,9 @@
     ]
   },
   "voice": {
-    "provider": "vapi",
-    "voiceId": "Elliot"
+    "provider": "11labs",
+    "voiceId": "TyAD2ntJFdDReoa55SLn",
+    "model": "eleven_multilingual_v2"
   },
   "transcriber": {
     "provider": "deepgram",
