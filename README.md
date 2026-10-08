@@ -21,7 +21,7 @@ Phone → Twilio (live) / scenario engine (demo) → voice layer → Ayo
 
 | Surface | URL |
 |---|---|
-| Customer app (SoroAI landing + Talk to Ayo + authorize) | https://web-oluwadareanuoluwapo458-7684.vercel.app |
+| Customer app (SoroAI landing + Talk to Ayo + authorize) | https://web-coral-kappa-89.vercel.app/demo|
 | Command Center | https://command-center-oluwadareanuoluwapo458-7684.vercel.app |
 | Backend API (Render) | https://soro-api.onrender.com |
 
