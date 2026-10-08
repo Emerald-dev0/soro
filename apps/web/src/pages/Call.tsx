@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import * as VapiModule from '@vapi-ai/web';
 
 interface VapiLike {
   start(assistantId: string): Promise<unknown>;
@@ -11,7 +10,14 @@ interface VapiLike {
   on(event: 'error', cb: (e: unknown) => void): void;
   on(event: 'call-start' | 'call-end' | 'speech-start' | 'speech-end', cb: () => void): void;
 }
-const Vapi = ((VapiModule as unknown as { default?: unknown }).default ?? VapiModule) as unknown as new (publicKey: string) => VapiLike;
+async function loadVapi(): Promise<new (publicKey: string) => VapiLike> {
+  const mod = (await import('@vapi-ai/web')) as unknown as Record<string, unknown>;
+  const nested = (mod['default'] ?? {}) as Record<string, unknown>;
+  const candidates = [nested['default'], mod['default'], mod['Vapi'], mod];
+  const ctor = candidates.find((c) => typeof c === 'function');
+  if (!ctor) throw new Error('Voice library failed to load. Please refresh and try again.');
+  return ctor as new (publicKey: string) => VapiLike;
+}
 
 type Phase = 'idle' | 'connecting' | 'active' | 'ended' | 'error';
 
@@ -49,12 +55,8 @@ export function Call() {
       return;
     }
     try {
-      if (typeof Vapi !== 'function') {
-        setError('Voice library failed to load. Please refresh and try again.');
-        setPhase('error');
-        return;
-      }
       setPhase('connecting');
+      const Vapi = await loadVapi();
       const vapi = new Vapi(PUBLIC_KEY);
       vapiRef.current = vapi;
       vapi.on('call-start', () => {
