@@ -1,6 +1,13 @@
 import { Link } from 'react-router-dom';
 import { Ayo, Reveal } from '../components/Ayo.js';
 import { LiveDemo } from '../components/LiveDemo.js';
+import { ArrowIcon, BoltIcon, ChatIcon, DocIcon, GlobeIcon, LockIcon, MicIcon, ShieldIcon, SwapIcon } from '../components/icons.js';
+
+const PHRASES = [
+  '“How much dey my account?”', '“Abeg send five thousand to Aisha.”',
+  '“Mo fẹ́ mọ iye owó tó wà nínú account mi.”', '“I need data.”',
+  '“Send my statement.”', '“Something is wrong with my transfer.”',
+];
 
 function Nav() {
   return (
@@ -25,24 +32,33 @@ export function Landing() {
       <Nav />
       <main>
         {/* HERO */}
-        <div className="soro-page" style={{ paddingTop: 56 }}>
-          <div className="soro-hero">
+        <div className="soro-page" style={{ paddingTop: 0, paddingBottom: 0 }}>
+          <div className="soro-hero-grid">
             <div>
-              <h1>Banking shouldn&rsquo;t require you to know how to bank.</h1>
-              <p className="lead">
-                Meet SoroAI — a conversational financial interface. Check your balance,
-                send money, buy data, and get statements simply by speaking to Ayo,
-                in English, Pidgin, or Yoruba.
+              <div className="soro-kicker">Conversational financial interface · Nigeria</div>
+              <h1 className="soro-display">Banking shouldn&rsquo;t require you to <em>know how to bank.</em></h1>
+              <p className="soro-lead">
+                SoroAI lets you check your balance, send money, buy data, and get statements
+                simply by speaking to Ayo — in English, Pidgin, or Yoruba.
               </p>
-              <div className="soro-row">
-                <Link className="soro-btn soro-btn-primary" to="/call">Talk to Ayo</Link>
-                <a className="soro-btn" href="#how">See how it works</a>
+              <div className="soro-row" style={{ marginTop: 20 }}>
+                <Link className="soro-btn soro-btn-primary" to="/call" style={{ padding: '13px 26px', fontSize: 15 }}>Talk to Ayo <ArrowIcon /></Link>
+                <a className="soro-btn" href="#how" style={{ padding: '13px 22px', fontSize: 15 }}>See how it works</a>
               </div>
             </div>
-            <div>
-              <LiveDemo />
-            </div>
+            <Reveal>
+              <div className="soro-ayo-arch">
+                <img src="/ayo/welcome.jpg" alt="Ayo waving hello" loading="eager" decoding="async" />
+              </div>
+            </Reveal>
           </div>
+          <Reveal><LiveDemo /></Reveal>
+          <div style={{ height: 48 }} />
+        </div>
+
+        {/* TICKER */}
+        <div className="soro-ticker" aria-hidden>
+          <div className="soro-ticker-inner">{[...PHRASES, ...PHRASES].map((p, i) => <span key={i}>{p}</span>)}</div>
         </div>
 
         {/* TRUST STRIP */}
@@ -58,10 +74,21 @@ export function Landing() {
             <div className="soro-kicker">The problem</div>
             <h2 className="soro-h2" id="h-problem">Your money shouldn&rsquo;t come with a user manual.</h2>
             <p className="soro-lead">
-              Banking apps assume you already understand banking — the menus, the terminology,
-              the authentication steps. But people don&rsquo;t think in banking menus.
-              They think in outcomes: <em>&ldquo;I need data.&rdquo;</em>
+              Banking apps assume you already understand banking. But people don&rsquo;t think
+              in menus — they think in outcomes. For millions of Nigerians, the app itself
+              is the barrier between them and their own money.
             </p>
+          </Reveal>
+          <Reveal>
+            <figure className="soro-photo-band" style={{ margin: '28px 0 0' }}>
+              <img className="bg" src="/photos/lagos-market.jpg" alt="A young trader pushing a wheelbarrow through Lagos traffic" loading="lazy" decoding="async" />
+              <span className="shade" aria-hidden />
+              <figcaption className="cap">
+                <h3>He knows exactly what his money needs to do.</h3>
+                <p>He shouldn&rsquo;t need to learn an app to do it. SoroAI meets customers where they are — by voice, in their language.</p>
+              </figcaption>
+            </figure>
+            <p className="soro-credit">Mile 12 market, Lagos — photo: Shedrack Salami / Unsplash</p>
           </Reveal>
           <Reveal>
             <div className="soro-vs">
@@ -73,14 +100,14 @@ export function Landing() {
               </div>
               <div className="soro-card" style={{ borderColor: 'var(--soro-accent)' }}>
                 <h3>SoroAI</h3>
-                <p style={{ fontSize: 16, fontWeight: 600 }}>&ldquo;Abeg buy me ₦500 data.&rdquo;</p>
+                <p style={{ fontSize: 17, fontWeight: 650 }}>&ldquo;Abeg buy me ₦500 data.&rdquo;</p>
                 <p style={{ fontSize: 14, color: 'var(--soro-muted)' }}>That&rsquo;s it.</p>
               </div>
             </div>
           </Reveal>
         </section></div>
 
-        {/* NATURAL LANGUAGE */}
+        {/* LANGUAGE */}
         <div className="alt"><div className="soro-page"><section className="soro-section" aria-labelledby="h-lang">
           <Reveal>
             <div className="soro-kicker">Natural language</div>
@@ -89,20 +116,13 @@ export function Landing() {
           <div className="soro-split">
             <Reveal>
               <div className="soro-card">
-                <h3>Customer language</h3>
-                <p style={{ fontSize: 15 }}>&ldquo;How much dey my account?&rdquo;</p>
-                <p style={{ fontSize: 15 }}>&ldquo;Abeg send five thousand to Aisha.&rdquo;</p>
-                <p style={{ fontSize: 15 }}>&ldquo;Mo fẹ́ mọ iye owó tó wà nínú account mi.&rdquo;</p>
-                <p style={{ fontSize: 15 }}>&ldquo;Something is wrong with my transfer.&rdquo;</p>
+                <h3>What customers say</h3>
+                <div className="soro-feat"><span className="soro-icon"><ChatIcon /></span><div><strong>&ldquo;I need data.&rdquo;</strong><p>Intent BUY_DATA → find plans, recommend, confirm, authorize, purchase.</p></div></div>
+                <div className="soro-feat"><span className="soro-icon"><MicIcon /></span><div><strong>&ldquo;Mo fẹ́ mọ iye owó tó wà&rdquo;</strong><p>Yoruba in, same structured banking intent out.</p></div></div>
+                <div className="soro-feat"><span className="soro-icon"><BoltIcon /></span><div><strong>&ldquo;Something is wrong with my transfer.&rdquo;</strong><p>Support case opened, human escalation ready.</p></div></div>
               </div>
             </Reveal>
-            <Reveal>
-              <div className="soro-flow" aria-label="How Soro understands">
-                {[['Soro understands', 'Intent · BUY_DATA'], ['Soro acts', 'Find plans → Recommend → Confirm → Authorize → Purchase']].map(([t, d]) => (
-                  <div key={t}><div className="node"><strong>{t}</strong><span style={{ color: 'var(--soro-muted)', fontSize: 13 }}>{d}</span></div></div>
-                ))}
-              </div>
-            </Reveal>
+            <Reveal><Ayo pose="speaking" /></Reveal>
           </div>
         </section></div></div>
 
@@ -111,13 +131,14 @@ export function Landing() {
           <div className="soro-split">
             <Reveal>
               <div className="soro-kicker">Meet Ayo</div>
-              <h2 className="soro-h2" id="h-ayo">Your conversational financial assistant.</h2>
+              <h2 className="soro-h2" id="h-ayo">A financial concierge, not a chatbot.</h2>
               <p className="soro-lead">
                 Ayo listens, understands what you&rsquo;re trying to accomplish, and guides you
-                through it — without making you learn the language of banking.
+                through it — without making you learn the language of banking. Ayo communicates;
+                the Soro backend decides and executes.
               </p>
               <div className="soro-lang-pills">
-                <span className="soro-badge info">English</span>
+                <span className="soro-badge info"><GlobeIcon /> English</span>
                 <span className="soro-badge info">Nigerian Pidgin</span>
                 <span className="soro-badge info">Yoruba</span>
               </div>
@@ -152,44 +173,30 @@ export function Landing() {
             <Reveal>
               <div className="soro-kicker">Security</div>
               <h2 className="soro-h2" id="h-sec">Conversation should be simple. Security shouldn&rsquo;t be.</h2>
-              <p className="soro-lead">
-                Ayo never sees your PIN. Sensitive actions require keypad authorization,
-                financial operations run in the backend, and every important action is recorded.
-              </p>
-              <div className="soro-flow" aria-label="Secure pipeline">
-                {['Request', 'Authentication', 'Confirmation', 'Authorization', 'Transaction', 'Audit'].map((s, i, arr) => (
-                  <div key={s}>
-                    <div className="node"><strong>{s}</strong>{i === 3 ? <span className="soro-badge warn">PIN required</span> : null}</div>
-                    {i < arr.length - 1 && <div className="arrow">↓</div>}
-                  </div>
-                ))}
-              </div>
+              <div className="soro-feat"><span className="soro-icon"><LockIcon /></span><div><strong>AI never sees your PIN.</strong><p>Keypad authorization is verified by the backend alone.</p></div></div>
+              <div className="soro-feat"><span className="soro-icon"><ShieldIcon /></span><div><strong>Every sensitive action requires authorization.</strong><p>With attempt limits and lockout on abuse.</p></div></div>
+              <div className="soro-feat"><span className="soro-icon"><DocIcon /></span><div><strong>Every important action is recorded.</strong><p>A complete audit trail feeds the Command Center.</p></div></div>
             </Reveal>
             <Reveal><Ayo pose="security" /></Reveal>
           </div>
         </section></div>
 
         {/* UNDER THE HOOD */}
-        <div className="alt"><div className="soro-page"><section className="soro-section" id="command" aria-labelledby="h-hood">
+        <div className="soro-page" style={{ paddingTop: 0 }}><section aria-labelledby="h-hood">
           <Reveal>
-            <div className="soro-kicker">Under the hood</div>
-            <h2 className="soro-h2" id="h-hood">Simple for the customer. Serious underneath.</h2>
-            <p className="soro-lead">
-              Ayo doesn&rsquo;t control your money. Soro separates conversation from financial
-              execution — <strong>AI understands, the backend decides.</strong>
-            </p>
-          </Reveal>
-          <div className="soro-split">
-            <Reveal>
-              <div className="soro-card">
-                <h3>Live from the Command Center</h3>
-                <p style={{ fontSize: 14, color: 'var(--soro-muted)' }}>Intent <strong>BUY_DATA</strong> · Authorization <strong style={{ color: 'var(--soro-green)' }}>SUCCESS</strong> · Transaction <strong>₦500.00 SUCCESS</strong> · Balance ₦84,250.00 → ₦83,750.00</p>
-                <p><a className="soro-btn" href="/command" target="_blank" rel="noreferrer">Explore the Command Center</a></p>
+            <div className="soro-dark" id="command">
+              <div className="soro-kicker">Under the hood</div>
+              <h2 className="soro-h2" id="h-hood">Simple for the customer. Serious underneath.</h2>
+              <p className="soro-lead">AI understands. The backend decides. Watch a ₦500 data purchase move through the real pipeline:</p>
+              <div className="soro-grid cols-3" style={{ marginTop: 24 }}>
+                <div><div className="soro-stat" style={{ color: '#fff' }}>BUY_DATA</div><p style={{ color: '#b9beb8', fontSize: 13 }}>Intent detected from Pidgin speech</p></div>
+                <div><div className="soro-stat" style={{ color: '#fff' }}>₦500.00</div><p style={{ color: '#b9beb8', fontSize: 13 }}>MTN · 1.5GB · 7 days — authorized, executed</p></div>
+                <div><div className="soro-stat" style={{ color: '#fff' }}>₦83,750.00</div><p style={{ color: '#b9beb8', fontSize: 13 }}>Balance after purchase, confirmed by provider</p></div>
               </div>
-            </Reveal>
-            <Reveal><Ayo pose="success" /></Reveal>
-          </div>
-        </section></div></div>
+              <p style={{ marginTop: 24 }}><a className="soro-btn soro-btn-primary" href="/command" target="_blank" rel="noreferrer">Explore the Command Center</a></p>
+            </div>
+          </Reveal>
+        </section></div>
 
         {/* CAPABILITIES */}
         <div className="soro-page"><section className="soro-section" aria-labelledby="h-cap">
@@ -197,32 +204,38 @@ export function Landing() {
             <div className="soro-kicker">Capabilities</div>
             <h2 className="soro-h2" id="h-cap">Everyday banking, by conversation.</h2>
           </Reveal>
-          <div className="soro-split">
-            <Reveal><Ayo pose="speaking" /></Reveal>
+          <div className="soro-grid cols-2" style={{ marginTop: 24 }}>
             <Reveal>
-              <div className="soro-grid cols-2">
-                <div className="soro-card"><h3>Available now</h3><p style={{ fontSize: 14, color: 'var(--soro-muted)', lineHeight: 1.9, margin: 0 }}>Balances · Transfers · Airtime · Data plans · Statements · Transaction history · Support &amp; escalation</p></div>
-                <div className="soro-card"><h3>What&rsquo;s next</h3><p style={{ fontSize: 14, color: 'var(--soro-muted)', lineHeight: 1.9, margin: 0 }}>Savings · Credit · Emergency liquidity · Insurance — through the same conversation.</p></div>
+              <div className="soro-card">
+                <h3>Available now · Demo</h3>
+                <div className="soro-feat"><span className="soro-icon"><BoltIcon /></span><div><strong>Balances &amp; history</strong><p>Real ledger state, read aloud.</p></div></div>
+                <div className="soro-feat"><span className="soro-icon"><SwapIcon /></span><div><strong>Transfers, airtime &amp; data</strong><p>With recommendations and keypad authorization.</p></div></div>
+                <div className="soro-feat"><span className="soro-icon"><DocIcon /></span><div><strong>Statements &amp; support</strong><p>Generated, emailed, escalated to humans.</p></div></div>
+              </div>
+            </Reveal>
+            <Reveal>
+              <div className="soro-card">
+                <h3>What&rsquo;s next</h3>
+                <p style={{ fontSize: 14, color: 'var(--soro-muted)', lineHeight: 1.8 }}>Savings · Credit · Emergency liquidity · Insurance — through the same conversation. <br /><br />&ldquo;Ayo, I need ₦20,000 to restock my shop.&rdquo;</p>
               </div>
             </Reveal>
           </div>
         </section></div>
 
         {/* ACCESSIBILITY */}
-        <div className="alt"><div className="soro-page"><section className="soro-section" aria-labelledby="h-acc">
-          <div className="soro-split">
-            <Reveal>
-              <div className="soro-kicker">Access</div>
-              <h2 className="soro-h2" id="h-acc">Financial services should adapt to people.</h2>
-              <p className="soro-lead">
-                Not everyone wants to navigate a banking app. Not everyone is comfortable
-                with formal financial terminology. SoroAI meets customers where they are —
-                by voice, in the language they think in. The technology adapts to the customer.
-              </p>
-            </Reveal>
-            <Reveal><Ayo pose="walking" /></Reveal>
-          </div>
-        </section></div></div>
+        <div className="soro-page" style={{ paddingTop: 0 }}><section aria-labelledby="h-acc">
+          <Reveal>
+            <figure className="soro-photo-band" style={{ margin: 0 }}>
+              <img className="bg" src="/photos/lagos-fruit.jpg" alt="Fruit sellers at Mile 12 market, Lagos" loading="lazy" decoding="async" />
+              <span className="shade" aria-hidden />
+              <figcaption className="cap">
+                <h3 id="h-acc">Financial services should adapt to people.</h3>
+                <p>Not everyone wants to navigate a banking app. SoroAI meets customers where they are — by voice, in the language they think in. The technology adapts to the customer.</p>
+              </figcaption>
+            </figure>
+            <p className="soro-credit">Mile 12 market, Lagos — photo: Mary / Unsplash</p>
+          </Reveal>
+        </section></div>
 
         {/* FINAL CTA */}
         <div className="soro-page"><section className="soro-section" aria-labelledby="h-cta">
@@ -239,7 +252,7 @@ export function Landing() {
           </div>
         </section>
         <section aria-label="Brand statement" style={{ textAlign: 'center', padding: '24px 0 56px' }}>
-          <p style={{ fontSize: 'clamp(22px, 3vw, 30px)', fontWeight: 650, letterSpacing: '-0.02em', margin: '0 0 8px' }}>Banking shouldn&rsquo;t require you to know how to bank.</p>
+          <p style={{ fontSize: 'clamp(22px, 3vw, 30px)', fontWeight: 750, letterSpacing: '-0.025em', margin: '0 0 8px' }}>Banking shouldn&rsquo;t require you to know how to bank.</p>
           <p className="soro-fine">SoroAI · Conversational financial services · Demo — simulated data, real engine</p>
         </section></div>
       </main>
@@ -253,7 +266,7 @@ export function Landing() {
             <a href="/command" target="_blank" rel="noreferrer">Command Center</a>
             <Link to="/call">Talk to Ayo</Link>
           </nav>
-          <p className="soro-fine">SoroAI is a conversational interface, not a bank. Demo data is simulated and clearly labelled.</p>
+          <p className="soro-fine">SoroAI is a conversational interface, not a bank. Demo data is simulated and clearly labelled. Photography: Shedrack Salami, Mary via Unsplash.</p>
         </div>
       </footer>
     </>
