@@ -5,7 +5,7 @@ import { COMMAND_CENTER_URL } from '../config.js';
 
 interface Line { sender: 'AYO' | 'CUSTOMER' | 'SYSTEM'; text: string }
 
-const TURNS = ['Abeg buy me 500 naira data.', 'yes', 'How much money remain?', 'Send my statement to my email.', 'yes'];
+const TURNS = ["What's my account balance?", 'Mo fẹ ra data 500 naira.', 'yes', 'How much remain?', 'Send my statement to my email.', 'yes'];
 const LINE_MS = 7000;
 
 function speakerOf(sender: string): 'ayo' | 'customer' {

@@ -7,11 +7,12 @@ export interface DetectedUtterance {
   confidence: number | null;
 }
 
-const PIDGIN_MARKERS = ['abeg', 'dey', 'remain', 'how much', 'wuna', 'my account', 'no get', 'oga', 'buy me', 'dey my'];
+const PIDGIN_MARKERS = ['abeg', 'dey', 'remain', 'how much dey', 'wuna', 'no get', 'oga', 'buy me', 'dey my'];
 const YORUBA_MARKERS = ['mo fẹ', 'mo fe', 'iye', 'owo', 'tó', 'wa ninu', 'e se', 'jowo', 'se wa'];
 
 export function detectLanguage(text: string): LanguageCode {
-  const t = text.toLowerCase();
+  // Strip diacritics so tonal Yoruba (ẹ́, ọ̀, tó) matches plain markers.
+  const t = text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   const yo = YORUBA_MARKERS.filter((m) => t.includes(m)).length;
   const pcm = PIDGIN_MARKERS.filter((m) => t.includes(m)).length;
   if (yo > pcm && yo > 0) return 'yo';
