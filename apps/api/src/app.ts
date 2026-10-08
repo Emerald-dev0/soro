@@ -1,6 +1,7 @@
 import Fastify from 'fastify';
 import { randomUUID } from 'node:crypto';
 import { dirname, join } from 'node:path';
+import { mkdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { openDatabase, migrate } from '@soro/db';
 import { MockBankingCore } from '@soro/banking';
@@ -24,6 +25,7 @@ export interface AppContext {
 
 export function buildApp(): ReturnType<typeof Fastify> {
   const dbPath = process.env.SORO_DATABASE_PATH ?? join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..', 'data', 'soro.db');
+  mkdirSync(dirname(dbPath), { recursive: true });
   const database = openDatabase(dbPath);
   migrate(database);
   const core = new MockBankingCore(database);
