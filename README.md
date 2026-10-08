@@ -9,6 +9,73 @@ control.** The voice of the system is **Ayo**.
 
 > Start with `AGENTS.md` (engineering constitution), then `docs/PRODUCT.md`.
 
+## The problems Soro exists to solve
+
+### 1. Banking apps assume you already understand banking
+Menus, sub-menus, "payments" vs "transfers" vs "bills", OTP flows that expire
+while you read them, updates that move everything overnight. Millions of
+Nigerians know exactly what they want — *"send money to my daughter"* — but
+the app is the barrier between them and their own money. Soro removes the
+interface entirely: the customer states the outcome, Ayo and the backend
+handle the navigation, validation, and execution.
+
+### 2. USSD codes fail when you need them most
+`*901#`-style banking was supposed to be the equalizer, but sessions time out
+mid-transaction, wrong keypresses swallow requests, network drops leave
+transfers in limbo, and cryptic error codes explain nothing. A voice
+conversation doesn't time out in 30 seconds, doesn't punish a mistyped digit,
+and always tells you what actually happened — confirmed by the provider, not
+assumed.
+
+### 3. "My money don hang" — failed transfers and disputes
+A debited-but-unreceived transfer today means days of anxiety: branch queues,
+call centers, reference numbers nobody can find. Soro attacks this three ways:
+every operation carries a real transaction reference and explicit state
+(including `UNKNOWN_RESULT`, which is never relabelled as success); support
+cases with transaction context can be opened mid-call and escalated to humans;
+and the **vision** is an AI agent that settles routine disputes itself —
+detecting duplicate debits, confirming provider state on both legs, and
+initiating reversals with the customer only confirming. *(Dispute
+auto-settlement is vision, not built: case creation + human escalation are.)*
+
+### 4. Language and literacy exclusion
+Formal banking English excludes. Ayo speaks the customer's language —
+Yoruba, Nigerian Pidgin, English — because the surface language changes but
+the banking intent doesn't. This isn't localization decoration; intent
+understanding, confirmations, and responses all run in the detected language.
+
+### 5. Digital inclusion is the product, not a feature
+Older adults who prefer speaking to typing. People with low digital literacy
+who understand money but not app navigation. Accessibility users locked out of
+visual interfaces. Basic-phone owners with no smartphone at all — a phone call
+is the most universal interface ever shipped. Soro is designed for all of them
+first, not as an afterthought.
+
+## Where Ayo expands from here
+
+Live today: balances, transfers, airtime, data plans + recommendations,
+statements, transaction history, support cases, human escalation — all by
+voice, all audited.
+
+The same conversational layer extends naturally to savings, credit and
+emergency liquidity (*"Ayo, I need ₦20,000 to restock my shop"*), insurance,
+bill payments, and merchant collections — each new capability arriving as a
+backend tool with the same confirmation + authorization guarantees, never as
+new menus to learn.
+
+## Progressive trust: from PINs to passphrases (vision)
+
+Today, sensitive actions require explicit confirmation plus DTMF keypad
+authorization — the PIN never reaches the AI, transcripts, or logs. The
+architecture is designed to grow past static PINs: every successful voice
+interaction enriches the customer's voice profile, and over time the system
+accumulates enough verification history to offer a spoken **passphrase**
+instead of a keypad PIN for step-up authorization — same backend guarantees,
+lower friction. *(Voice profiles, attempt tracking, and the risk engine exist
+today; the voice-identity provider is a demo stub and passphrase auth is a
+designed-but-unbuilt step. Nothing here is presented as production
+biometrics.)*
+
 ## Architecture at a glance
 
 ```text
