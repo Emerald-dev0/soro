@@ -14,6 +14,17 @@
     "test": "vitest run tests src"
   },
   "dependencies": {
-    "@soro/types": "workspace:*"
+    "@soro/types": "workspace:*",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./components": "./src/components.tsx",
+    "./styles/*": "./styles/*"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0"
   }
 }

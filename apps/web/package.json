@@ -3,18 +3,30 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Soro web app shell (Phase 0 — screens land in later phases)",
+  "description": "Soro web app shell (Phase 0 \u2014 screens land in later phases)",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "scripts": {
-    "dev": "echo \"web: Phase 0 shell (screens land in later phases)\"",
-    "build": "tsc -p tsconfig.json",
+    "dev": "vite",
+    "build": "tsc -p tsconfig.json && vite build",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "eslint src tests",
-    "test": "vitest run tests src"
+    "test": "vitest run tests src",
+    "preview": "vite preview"
   },
   "dependencies": {
     "@soro/types": "workspace:*",
-    "@soro/ui": "workspace:*"
+    "@soro/ui": "workspace:*",
+    "@vapi-ai/web": "^2.7.1",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "react-router-dom": "^7.18.4",
+    "@soro/api-client": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "vite": "^8.3.3"
   }
 }

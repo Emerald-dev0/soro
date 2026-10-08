@@ -39,3 +39,27 @@ per-route auth, and blue/green deploys gated on the contract suite.
 Push to any remote, deploy anywhere, publish packages, or bake
 credentials into images — the project is local-first until the checklist
 above is real.
+
+## Render backend deploy (added with frontend build)
+
+`render.yaml` at the repo root defines the `soro-api` web service:
+
+- Build: `pnpm install --frozen-lockfile && pnpm build`
+- Start: `pnpm --filter @soro/api start` (tsx is a production dependency)
+- Health check: `GET /health`
+- Persistent SQLite via a 1 GB disk mounted at `/data` with
+  `SORO_DATABASE_PATH=/data/soro.db`
+- Secrets (`TWILIO_*`, `APP_BASE_URL`, `ADMIN_TOKEN`, …) are set in the
+  Render dashboard, never in the repo
+
+After deploy, point Twilio webhooks, the Vapi Server URL, and both
+frontends' `VITE_SORO_API_URL` at the Render domain.
+
+## Vercel frontend deploys
+
+- `apps/web` → Vercel project, framework preset Vite. Env:
+  `VITE_SORO_API_URL`, `VITE_VAPI_PUBLIC_KEY`,
+  `VITE_VAPI_ASSISTANT_ID=440f103a-2190-4780-8844-6ce9a9fdb441`
+- `apps/command-center` → separate Vercel project. Env: `VITE_SORO_API_URL`
+- Only `VITE_*` values ship to the browser. Never put private keys,
+  Twilio secrets, or database URLs in frontend env.

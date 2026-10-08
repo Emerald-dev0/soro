@@ -1,0 +1,40 @@
+# Soro backend on Render. The two frontend apps deploy separately on Vercel.
+services:
+  - type: web
+    name: soro-api
+    runtime: node
+    plan: free
+    buildCommand: pnpm install --frozen-lockfile && pnpm build
+    startCommand: pnpm --filter @soro/api start
+    healthCheckPath: /health
+    disk:
+      name: soro-data
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - key: NODE_VERSION
+        value: 24.19.0
+      - key: SORO_PORT
+        value: 10000
+      - key: SORO_DATABASE_PATH
+        value: /data/soro.db
+      - key: DEMO_MODE
+        value: 'true'
+      - key: TWILIO_ACCOUNT_SID
+        sync: false
+      - key: TWILIO_AUTH_TOKEN
+        sync: false
+      - key: TWILIO_PHONE_NUMBER
+        sync: false
+      - key: TWILIO_WEBHOOK_BASE_URL
+        sync: false
+      - key: APP_BASE_URL
+        sync: false
+      - key: WEBHOOK_SECRET
+        generateValue: true
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: ADMIN_TOKEN
+        generateValue: true
+      - key: RATE_LIMIT_PER_MINUTE
+        value: '120'
